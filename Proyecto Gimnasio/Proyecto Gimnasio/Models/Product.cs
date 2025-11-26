@@ -3,12 +3,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Proyecto_Gimnasio.Models
 {
-	public class Product
+	public class Product:AuditData
 	{
 		[Key]
 		public int IdProduct { get; set; }
 
-		[Required, StringLength(200)]
+		[Required, StringLength(150)]
 		public string NameProduct { get; set; }
 
 		public string Image { get; set; }
@@ -22,15 +22,15 @@ namespace Proyecto_Gimnasio.Models
 		[DataType(DataType.Date)]
 		public DateTime ExpirationDate { get; set; }
 
-		// FK Category
-		//relacion Category 1–N Product
+		// FK a Category
+		[Required]
 		public int IdCategory { get; set; }
 
 		[ForeignKey("IdCategory")]
 		public Category Category { get; set; }
-		//relacion Product 1–N SaleDetailsProducts
 
-		public ICollection<SaleDetailsProducts> SaleDetailsProducts { get; set; }
+		// Detalles de venta
+		public ICollection<SaleDetailsProducts>? SaleDetailsProducts { get; set; }
 
 	}
 }

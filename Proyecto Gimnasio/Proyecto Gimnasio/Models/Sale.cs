@@ -2,7 +2,7 @@
 
 namespace Proyecto_Gimnasio.Models
 {
-	public class Sale
+	public class Sale:AuditData
 	{
 		[Key]
 		public int IdSale { get; set; }
@@ -10,10 +10,16 @@ namespace Proyecto_Gimnasio.Models
 		[Range(0, double.MaxValue)]
 		public double Total { get; set; }
 
-		[DataType(DataType.Date)]
+		[DataType(DataType.DateTime)]
 		public DateTime DateSale { get; set; }
-		//m-m sale y productos 
-		public ICollection<SaleDetailsProducts> SaleDetailsProducts { get; set; }
+
+		// Cliente asociado a la venta
+		public int IdPerson { get; set; }
+		public Person Person { get; set; }
+
+		// Detalles
+		public ICollection<SaleDetailsProducts>? SaleDetailsProducts { get; set; }
+		public ICollection<SaleDetailsPlans>? SaleDetailsPlans { get; set; }
 
 	}
 }

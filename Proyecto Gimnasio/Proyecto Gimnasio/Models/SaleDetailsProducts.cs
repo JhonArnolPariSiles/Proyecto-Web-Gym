@@ -14,16 +14,13 @@ namespace Proyecto_Gimnasio.Models
 		[Range(0, double.MaxValue)]
 		public double TotalPrice { get; set; }
 
-		// 1-m sale 
+		// Venta asociada
 		public int IdSale { get; set; }
-
-		[ForeignKey("IdSale")]
 		public Sale Sale { get; set; }
 
-		// 1-m product
+		// Producto asociado
 		public int IdProduct { get; set; }
-
-		[ForeignKey("IdProduct")]
 		public Product Product { get; set; }
+
 	}
 }
