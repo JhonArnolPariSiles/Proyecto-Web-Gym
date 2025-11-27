@@ -23,6 +23,8 @@ namespace Proyecto_Gimnasio.Models
 		ErrorMessage = "Password must contain at least one uppercase letter, one lowercase letter, one number and one special character")]
 		public string Password { get; set; }
 
+		public bool primarySession { get; set; }
+
 		[Required(ErrorMessage = "Role is required")]
 		[Display(Name = "Role")]
 		[RegularExpression(@"^(Admin|User|Employee)$",
