@@ -3,38 +3,46 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Proyecto_Gimnasio.Models
 {
-	public class Person:AuditData
+	public class Person : AuditData
 	{
 		[Key]
 		public int IdPerson { get; set; }
 
-		[Required, StringLength(100)]
+		[Required(ErrorMessage = "Name is required")]
+		[StringLength(20, ErrorMessage = "{0} must be: minimum {2} and maximum {1}", MinimumLength = 4)]
+		[Display(Name = "NAME")]
+		[RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Name must contain only letters")]
 		public string Name { get; set; }
 
-		[Required, StringLength(100)]
+		[Required(ErrorMessage = "Last Name is required")]
+		[StringLength(30, ErrorMessage = "{0} must be: minimum {2} and maximum {1}", MinimumLength = 5)]
+		[Display(Name = "LAST NAME")]
+		[RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Last Name must contain only letters")]
 		public string LasName { get; set; }
 
-		[Required, StringLength(100)]
-		public string SecondLastName { get; set; }
+		[StringLength(30, ErrorMessage = "{0} must be: minimum {2} and maximum {1}", MinimumLength = 5)]
+		[Display(Name = "SECOND LAST NAME")]
+		[RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Second Last Name must contain only letters")]
+		public string? SecondLastName { get; set; }
 
+		[Required(ErrorMessage = "Date of birth is required")]
 		[DataType(DataType.Date)]
-		[Required]
+		[Display(Name = "Date of Birth")]
 		public DateTime DateBirthay { get; set; }
 
-		[Required]
-		[Range(1, int.MaxValue, ErrorMessage = "El CI debe ser un número válido.")]
+		[Range(1, int.MaxValue)]
 		public int Cnit { get; set; }
 
-		[Required]
-		[RegularExpression("^[MF]$", ErrorMessage = "El género debe ser M o F.")]
+		[Required(ErrorMessage = "Gender is required")]
+		[RegularExpression("^[MF]$", ErrorMessage = "Solo se permite M o F")]
 		public char Gender { get; set; }
-
-		// Relación 1-1 con User
+		//relacion con User (1–1)
+		// FK hacia User
 		public int UserId { get; set; }
+
 		[ForeignKey("UserId")]
 		public User User { get; set; }
-
-		// Ventas asociadas
-		public ICollection<Sale> Sales { get; set; }
+		// relacion persona 1-M planes
+		public ICollection<Plans>? Plans { get; set; }
 	}
 }

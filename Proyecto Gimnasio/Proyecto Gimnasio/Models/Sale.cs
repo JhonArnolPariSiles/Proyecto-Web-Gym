@@ -7,19 +7,19 @@ namespace Proyecto_Gimnasio.Models
 		[Key]
 		public int IdSale { get; set; }
 
-		[Range(0, double.MaxValue)]
+
+		[Required(ErrorMessage = "Total is required")]
+		[Display(Name = "Total ")]
+		[DataType(DataType.Currency)]
+		[Range(0.01, double.MaxValue, ErrorMessage = "Total  must be greater than 0")]
 		public double Total { get; set; }
 
-		[DataType(DataType.DateTime)]
+		[Required(ErrorMessage = "Date Sale date is required")]
+		[Display(Name = "DATE SALE")]
+		[DataType(DataType.Date)]
 		public DateTime DateSale { get; set; }
-
-		// Cliente asociado a la venta
-		public int IdPerson { get; set; }
-		public Person Person { get; set; }
-
-		// Detalles
-		public ICollection<SaleDetailsProducts>? SaleDetailsProducts { get; set; }
-		public ICollection<SaleDetailsPlans>? SaleDetailsPlans { get; set; }
+		//m-m sale y productos 
+		public ICollection<SaleDetailsProducts> SaleDetailsProducts { get; set; }
 
 	}
 }
