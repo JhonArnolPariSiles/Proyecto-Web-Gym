@@ -2,14 +2,20 @@
 
 namespace Proyecto_Gimnasio.Models
 {
-	public class Sale
+	public class Sale:AuditData
 	{
 		[Key]
 		public int IdSale { get; set; }
 
-		[Range(0, double.MaxValue)]
+
+		[Required(ErrorMessage = "Total is required")]
+		[Display(Name = "Total ")]
+		[DataType(DataType.Currency)]
+		[Range(0.01, double.MaxValue, ErrorMessage = "Total  must be greater than 0")]
 		public double Total { get; set; }
 
+		[Required(ErrorMessage = "Date Sale date is required")]
+		[Display(Name = "DATE SALE")]
 		[DataType(DataType.Date)]
 		public DateTime DateSale { get; set; }
 		//m-m sale y productos 

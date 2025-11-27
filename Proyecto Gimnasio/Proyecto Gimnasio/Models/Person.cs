@@ -3,26 +3,37 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Proyecto_Gimnasio.Models
 {
-	public class Person
+	public class Person : AuditData
 	{
 		[Key]
 		public int IdPerson { get; set; }
 
-		[Required, StringLength(100)]
+		[Required(ErrorMessage = "Name is required")]
+		[StringLength(20, ErrorMessage = "{0} must be: minimum {2} and maximum {1}", MinimumLength = 4)]
+		[Display(Name = "NAME")]
+		[RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Name must contain only letters")]
 		public string Name { get; set; }
 
-		[Required, StringLength(100)]
+		[Required(ErrorMessage = "Last Name is required")]
+		[StringLength(30, ErrorMessage = "{0} must be: minimum {2} and maximum {1}", MinimumLength = 5)]
+		[Display(Name = "LAST NAME")]
+		[RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Last Name must contain only letters")]
 		public string LasName { get; set; }
 
-		[Required, StringLength(100)]
-		public string SecondLastName { get; set; }
+		[StringLength(30, ErrorMessage = "{0} must be: minimum {2} and maximum {1}", MinimumLength = 5)]
+		[Display(Name = "SECOND LAST NAME")]
+		[RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Second Last Name must contain only letters")]
+		public string? SecondLastName { get; set; }
 
+		[Required(ErrorMessage = "Date of birth is required")]
 		[DataType(DataType.Date)]
+		[Display(Name = "Date of Birth")]
 		public DateTime DateBirthay { get; set; }
 
 		[Range(1, int.MaxValue)]
 		public int Cnit { get; set; }
 
+		[Required(ErrorMessage = "Gender is required")]
 		[RegularExpression("^[MF]$", ErrorMessage = "Solo se permite M o F")]
 		public char Gender { get; set; }
 		//relacion con User (1–1)
@@ -32,6 +43,6 @@ namespace Proyecto_Gimnasio.Models
 		[ForeignKey("UserId")]
 		public User User { get; set; }
 		// relacion persona 1-M planes
-		public ICollection<Plans> Plans { get; set; }
+		public ICollection<Plans>? Plans { get; set; }
 	}
 }

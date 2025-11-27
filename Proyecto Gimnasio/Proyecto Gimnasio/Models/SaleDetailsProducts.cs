@@ -8,10 +8,15 @@ namespace Proyecto_Gimnasio.Models
 		[Key]
 		public int Id { get; set; }
 
-		[Range(1, int.MaxValue)]
+		[Required(ErrorMessage = "Quantity is required")]
+		[Display(Name = "Quantity")]
+		[Range(1, int.MaxValue, ErrorMessage = "Quantity must be at least 1")]
 		public int Quantity { get; set; }
 
-		[Range(0, double.MaxValue)]
+		[Required(ErrorMessage = "Total Price is required")]
+		[Display(Name = "Total Price")]
+		[DataType(DataType.Currency)]
+		[Range(0.01, double.MaxValue, ErrorMessage = "Total Price must be greater than 0")]
 		public double TotalPrice { get; set; }
 
 		// 1-m sale 
@@ -25,5 +30,6 @@ namespace Proyecto_Gimnasio.Models
 
 		[ForeignKey("IdProduct")]
 		public Product Product { get; set; }
+
 	}
 }
