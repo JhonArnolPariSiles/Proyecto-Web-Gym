@@ -1,6 +1,10 @@
+using BCrypt.Net;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Proyecto_Gimnasio.Data;
 using System;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -8,6 +12,13 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectio
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(option =>
+    {
+        option.LoginPath = "/Acceso/Login"; 
+        option.ExpireTimeSpan = TimeSpan.FromMinutes(20); 
+        option.AccessDeniedPath = "/Acceso/SinPermiso"; 
+    });
 
 var app = builder.Build();
 
@@ -24,10 +35,11 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Acceso}/{action=Login}/{id?}"); 
 
 app.Run();

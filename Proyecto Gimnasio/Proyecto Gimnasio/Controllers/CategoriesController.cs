@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Proyecto_Gimnasio.Data;
 using Proyecto_Gimnasio.Models;
 
+
 namespace Proyecto_Gimnasio.Controllers
 {
     public class CategoriesController : Controller
