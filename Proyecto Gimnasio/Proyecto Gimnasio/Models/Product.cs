@@ -42,10 +42,10 @@ namespace Proyecto_Gimnasio.Models
 		public int IdCategory { get; set; }
 
 		[ForeignKey("IdCategory")]
-		public Category Category { get; set; }
+		public Category? Category { get; set; }
 		//relacion Product 1–N SaleDetailsProducts
 
-		public ICollection<SaleDetailsProducts> SaleDetailsProducts { get; set; }
+		public ICollection<SaleDetailsProducts>? SaleDetailsProducts { get; set; }
 
 	}
 }

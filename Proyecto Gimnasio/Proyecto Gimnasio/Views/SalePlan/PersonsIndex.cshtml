@@ -1,0 +1,41 @@
+﻿@model IEnumerable<Proyecto_Gimnasio.Models.Person>
+@{
+    ViewData["Title"] = "Personas y sus planes";
+}
+
+<h2>Personas y sus planes</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Persona</th>
+            <th>Planes Comprados</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var person in Model)
+        {
+            <tr>
+                <td>@person.Name @person.LasName</td>
+                <td>
+                    @if (person.Sales != null && person.Sales.Any())
+                    {
+                        <ul>
+                            @foreach (var sale in person.Sales)
+                            {
+                                @foreach (var detail in sale.saleDetailsPlans)
+                                {
+                                    <li>@detail.Plans.NamePlan</li>
+                                }
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <span>No tiene planes</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

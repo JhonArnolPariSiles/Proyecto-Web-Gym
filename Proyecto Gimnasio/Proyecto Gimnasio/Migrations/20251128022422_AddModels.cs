@@ -17,10 +17,10 @@ namespace Proyecto_Gimnasio.Migrations
                 {
                     IdCategory = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    NameCategory = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    NameCategory = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     RegisterDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Status = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -34,14 +34,14 @@ namespace Proyecto_Gimnasio.Migrations
                 {
                     IdPlan = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    NamePlan = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    NamePlan = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Price = table.Column<double>(type: "float", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     RegisterDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Status = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -55,9 +55,10 @@ namespace Proyecto_Gimnasio.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    Rol = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Password = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    primarySession = table.Column<bool>(type: "bit", nullable: false),
+                    Rol = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -70,15 +71,15 @@ namespace Proyecto_Gimnasio.Migrations
                 {
                     IdProduct = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    NameProduct = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    Image = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    NameProduct = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Image = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     Stock = table.Column<int>(type: "int", nullable: false),
                     Price = table.Column<double>(type: "float", nullable: false),
                     ExpirationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IdCategory = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     RegisterDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Status = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -98,15 +99,15 @@ namespace Proyecto_Gimnasio.Migrations
                 {
                     IdPerson = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    LasName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    SecondLastName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    LasName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: false),
+                    SecondLastName = table.Column<string>(type: "nvarchar(30)", maxLength: 30, nullable: true),
                     DateBirthay = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Cnit = table.Column<int>(type: "int", nullable: false),
                     Gender = table.Column<string>(type: "nvarchar(1)", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     RegisterDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Status = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -129,18 +130,17 @@ namespace Proyecto_Gimnasio.Migrations
                     Total = table.Column<double>(type: "float", nullable: false),
                     DateSale = table.Column<DateTime>(type: "datetime2", nullable: false),
                     IdPerson = table.Column<int>(type: "int", nullable: false),
-                    PersonIdPerson = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     RegisterDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    LastDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Status = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Sales", x => x.IdSale);
                     table.ForeignKey(
-                        name: "FK_Sales_Persons_PersonIdPerson",
-                        column: x => x.PersonIdPerson,
+                        name: "FK_Sales_Persons_IdPerson",
+                        column: x => x.IdPerson,
                         principalTable: "Persons",
                         principalColumn: "IdPerson",
                         onDelete: ReferentialAction.Cascade);
@@ -155,22 +155,20 @@ namespace Proyecto_Gimnasio.Migrations
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     TotalPrice = table.Column<double>(type: "float", nullable: false),
                     IdSale = table.Column<int>(type: "int", nullable: false),
-                    SaleIdSale = table.Column<int>(type: "int", nullable: false),
-                    IdPlan = table.Column<int>(type: "int", nullable: false),
-                    PlansIdPlan = table.Column<int>(type: "int", nullable: false)
+                    IdPlan = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_saleDetailsPlans", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_saleDetailsPlans_Planss_PlansIdPlan",
-                        column: x => x.PlansIdPlan,
+                        name: "FK_saleDetailsPlans_Planss_IdPlan",
+                        column: x => x.IdPlan,
                         principalTable: "Planss",
                         principalColumn: "IdPlan",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_saleDetailsPlans_Sales_SaleIdSale",
-                        column: x => x.SaleIdSale,
+                        name: "FK_saleDetailsPlans_Sales_IdSale",
+                        column: x => x.IdSale,
                         principalTable: "Sales",
                         principalColumn: "IdSale",
                         onDelete: ReferentialAction.Cascade);
@@ -185,22 +183,20 @@ namespace Proyecto_Gimnasio.Migrations
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     TotalPrice = table.Column<double>(type: "float", nullable: false),
                     IdSale = table.Column<int>(type: "int", nullable: false),
-                    SaleIdSale = table.Column<int>(type: "int", nullable: false),
-                    IdProduct = table.Column<int>(type: "int", nullable: false),
-                    ProductIdProduct = table.Column<int>(type: "int", nullable: false)
+                    IdProduct = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_saleDetailsProducts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_saleDetailsProducts_Products_ProductIdProduct",
-                        column: x => x.ProductIdProduct,
+                        name: "FK_saleDetailsProducts_Products_IdProduct",
+                        column: x => x.IdProduct,
                         principalTable: "Products",
                         principalColumn: "IdProduct",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_saleDetailsProducts_Sales_SaleIdSale",
-                        column: x => x.SaleIdSale,
+                        name: "FK_saleDetailsProducts_Sales_IdSale",
+                        column: x => x.IdSale,
                         principalTable: "Sales",
                         principalColumn: "IdSale",
                         onDelete: ReferentialAction.Cascade);
@@ -218,29 +214,29 @@ namespace Proyecto_Gimnasio.Migrations
                 column: "IdCategory");
 
             migrationBuilder.CreateIndex(
-                name: "IX_saleDetailsPlans_PlansIdPlan",
+                name: "IX_saleDetailsPlans_IdPlan",
                 table: "saleDetailsPlans",
-                column: "PlansIdPlan");
+                column: "IdPlan");
 
             migrationBuilder.CreateIndex(
-                name: "IX_saleDetailsPlans_SaleIdSale",
+                name: "IX_saleDetailsPlans_IdSale",
                 table: "saleDetailsPlans",
-                column: "SaleIdSale");
+                column: "IdSale");
 
             migrationBuilder.CreateIndex(
-                name: "IX_saleDetailsProducts_ProductIdProduct",
+                name: "IX_saleDetailsProducts_IdProduct",
                 table: "saleDetailsProducts",
-                column: "ProductIdProduct");
+                column: "IdProduct");
 
             migrationBuilder.CreateIndex(
-                name: "IX_saleDetailsProducts_SaleIdSale",
+                name: "IX_saleDetailsProducts_IdSale",
                 table: "saleDetailsProducts",
-                column: "SaleIdSale");
+                column: "IdSale");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Sales_PersonIdPerson",
+                name: "IX_Sales_IdPerson",
                 table: "Sales",
-                column: "PersonIdPerson");
+                column: "IdPerson");
         }
 
         /// <inheritdoc />

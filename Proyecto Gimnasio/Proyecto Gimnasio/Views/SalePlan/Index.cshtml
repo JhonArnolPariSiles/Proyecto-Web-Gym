@@ -1,0 +1,105 @@
+﻿@model IEnumerable<Proyecto_Gimnasio.Models.Plans>
+
+@{
+    ViewData["Title"] = "Planes y Personas";
+    var persons = ViewBag.Persons as List<Proyecto_Gimnasio.Models.Person>;
+    var selectedPersonId = (int)ViewBag.SelectedPersonId;
+    var searchName = ViewBag.SearchName as string ?? "";
+}
+
+<h2>Planes y Personas</h2>
+
+<div class="mb-3">
+    <a asp-action="PersonsIndex" class="btn btn-info">Ver todas las personas y sus planes</a>
+</div>
+
+@if (TempData["msg"] != null)
+{
+    <div class="alert alert-success">@TempData["msg"]</div>
+}
+@if (TempData["error"] != null)
+{
+    <div class="alert alert-danger">@TempData["error"]</div>
+}
+
+<form asp-action="Index" method="get" class="mb-3">
+    <input type="text" name="searchName" class="form-control" placeholder="Buscar persona..." value="@searchName" />
+    <button type="submit" class="btn btn-primary mt-2">Buscar</button>
+</form>
+
+@if (persons != null && persons.Any())
+{
+    <table class="table table-bordered mb-4">
+        <thead>
+            <tr>
+                <th>Persona</th>
+                <th>Planes adquiridos</th>
+                <th>Seleccionar</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var person in persons)
+            {
+                <tr class="@(person.IdPerson == selectedPersonId ? "table-success" : "")">
+                    <td>@person.Name @person.LasName</td>
+                    <td>
+                        @if (person.Sales != null && person.Sales.Any())
+                        {
+                            <ul>
+                                @foreach (var sale in person.Sales)
+                                {
+                                    @foreach (var sd in sale.saleDetailsPlans)
+                                    {
+                                        <li>@sd.Plans.NamePlan (@sd.TotalPrice.ToString("C"))</li>
+                                    }
+                                }
+                            </ul>
+                        }
+                        else
+                        {
+                            <span>No tiene planes</span>
+                        }
+                    </td>
+                    <td>
+                        <form asp-action="SelectPerson" method="post">
+                            <input type="hidden" name="personId" value="@person.IdPerson" />
+                            <button type="submit" class="btn btn-success btn-sm">Seleccionar</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-warning">No se encontraron personas.</div>
+}
+
+<hr />
+
+<h3>Planes disponibles</h3>
+
+<div class="row">
+    @foreach (var plan in Model)
+    {
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h4>@plan.NamePlan</h4>
+                    <p>@plan.Description</p>
+                    <h5>Precio: @plan.Price.ToString("C")</h5>
+
+                    <form asp-action="Add" method="post">
+                        <input type="hidden" name="id" value="@plan.IdPlan" />
+                        <button type="submit" class="btn btn-primary" @(selectedPersonId == 0 ? "disabled" : "")>
+                            Agregar al carrito
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<a asp-action="Cart" class="btn btn-dark mt-3">Ir al carrito</a>

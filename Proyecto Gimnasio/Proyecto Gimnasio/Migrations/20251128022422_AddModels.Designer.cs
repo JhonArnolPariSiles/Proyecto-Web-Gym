@@ -12,7 +12,7 @@ using Proyecto_Gimnasio.Data;
 namespace Proyecto_Gimnasio.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251126135341_AddModels")]
+    [Migration("20251128022422_AddModels")]
     partial class AddModels
     {
         /// <inheritdoc />
@@ -33,13 +33,13 @@ namespace Proyecto_Gimnasio.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdCategory"));
 
-                    b.Property<DateTime>("LastDate")
+                    b.Property<DateTime?>("LastDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("NameCategory")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime>("RegisterDate")
                         .HasColumnType("datetime2");
@@ -75,24 +75,23 @@ namespace Proyecto_Gimnasio.Migrations
 
                     b.Property<string>("LasName")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
-                    b.Property<DateTime>("LastDate")
+                    b.Property<DateTime?>("LastDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<DateTime>("RegisterDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("SecondLastName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
@@ -117,20 +116,19 @@ namespace Proyecto_Gimnasio.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdPlan"));
 
                     b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(300)
-                        .HasColumnType("nvarchar(300)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("LastDate")
+                    b.Property<DateTime?>("LastDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("NamePlan")
                         .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<double>("Price")
                         .HasColumnType("float");
@@ -168,15 +166,16 @@ namespace Proyecto_Gimnasio.Migrations
 
                     b.Property<string>("Image")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)");
 
-                    b.Property<DateTime>("LastDate")
+                    b.Property<DateTime?>("LastDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("NameProduct")
                         .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<double>("Price")
                         .HasColumnType("float");
@@ -214,11 +213,8 @@ namespace Proyecto_Gimnasio.Migrations
                     b.Property<int>("IdPerson")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("LastDate")
+                    b.Property<DateTime?>("LastDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<int>("PersonIdPerson")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("RegisterDate")
                         .HasColumnType("datetime2");
@@ -234,7 +230,7 @@ namespace Proyecto_Gimnasio.Migrations
 
                     b.HasKey("IdSale");
 
-                    b.HasIndex("PersonIdPerson");
+                    b.HasIndex("IdPerson");
 
                     b.ToTable("Sales");
                 });
@@ -253,13 +249,7 @@ namespace Proyecto_Gimnasio.Migrations
                     b.Property<int>("IdSale")
                         .HasColumnType("int");
 
-                    b.Property<int>("PlansIdPlan")
-                        .HasColumnType("int");
-
                     b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SaleIdSale")
                         .HasColumnType("int");
 
                     b.Property<double>("TotalPrice")
@@ -267,9 +257,9 @@ namespace Proyecto_Gimnasio.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PlansIdPlan");
+                    b.HasIndex("IdPlan");
 
-                    b.HasIndex("SaleIdSale");
+                    b.HasIndex("IdSale");
 
                     b.ToTable("saleDetailsPlans");
                 });
@@ -288,13 +278,7 @@ namespace Proyecto_Gimnasio.Migrations
                     b.Property<int>("IdSale")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProductIdProduct")
-                        .HasColumnType("int");
-
                     b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SaleIdSale")
                         .HasColumnType("int");
 
                     b.Property<double>("TotalPrice")
@@ -302,9 +286,9 @@ namespace Proyecto_Gimnasio.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductIdProduct");
+                    b.HasIndex("IdProduct");
 
-                    b.HasIndex("SaleIdSale");
+                    b.HasIndex("IdSale");
 
                     b.ToTable("saleDetailsProducts");
                 });
@@ -319,17 +303,20 @@ namespace Proyecto_Gimnasio.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Rol")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("primarySession")
+                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -362,7 +349,7 @@ namespace Proyecto_Gimnasio.Migrations
                 {
                     b.HasOne("Proyecto_Gimnasio.Models.Person", "Person")
                         .WithMany("Sales")
-                        .HasForeignKey("PersonIdPerson")
+                        .HasForeignKey("IdPerson")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -373,13 +360,13 @@ namespace Proyecto_Gimnasio.Migrations
                 {
                     b.HasOne("Proyecto_Gimnasio.Models.Plans", "Plans")
                         .WithMany("SaleDetailsPlans")
-                        .HasForeignKey("PlansIdPlan")
+                        .HasForeignKey("IdPlan")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Proyecto_Gimnasio.Models.Sale", "Sale")
-                        .WithMany("SaleDetailsPlans")
-                        .HasForeignKey("SaleIdSale")
+                        .WithMany("saleDetailsPlans")
+                        .HasForeignKey("IdSale")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -392,13 +379,13 @@ namespace Proyecto_Gimnasio.Migrations
                 {
                     b.HasOne("Proyecto_Gimnasio.Models.Product", "Product")
                         .WithMany("SaleDetailsProducts")
-                        .HasForeignKey("ProductIdProduct")
+                        .HasForeignKey("IdProduct")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Proyecto_Gimnasio.Models.Sale", "Sale")
                         .WithMany("SaleDetailsProducts")
-                        .HasForeignKey("SaleIdSale")
+                        .HasForeignKey("IdSale")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -429,14 +416,15 @@ namespace Proyecto_Gimnasio.Migrations
 
             modelBuilder.Entity("Proyecto_Gimnasio.Models.Sale", b =>
                 {
-                    b.Navigation("SaleDetailsPlans");
-
                     b.Navigation("SaleDetailsProducts");
+
+                    b.Navigation("saleDetailsPlans");
                 });
 
             modelBuilder.Entity("Proyecto_Gimnasio.Models.User", b =>
                 {
-                    b.Navigation("Person");
+                    b.Navigation("Person")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

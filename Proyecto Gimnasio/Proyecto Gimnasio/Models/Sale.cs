@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Proyecto_Gimnasio.Models
 {
@@ -18,8 +19,17 @@ namespace Proyecto_Gimnasio.Models
 		[Display(Name = "DATE SALE")]
 		[DataType(DataType.Date)]
 		public DateTime DateSale { get; set; }
+
+		// FK a persona
+		public int IdPerson { get; set; }
+
+		[ForeignKey("IdPerson")]
+		public Person? Person { get; set; }
+
 		//m-m sale y productos 
-		public ICollection<SaleDetailsProducts> SaleDetailsProducts { get; set; }
+		public ICollection<SaleDetailsProducts>? SaleDetailsProducts { get; set; }
+
+		public ICollection<SaleDetailsPlans>? saleDetailsPlans { get; set; }
 
 	}
 }
