@@ -26,9 +26,8 @@
                 <input name="Email" id="Email" class="form-control" value="@Model.Email" required />
             </div>
             <div class="form-group">
-                <label for="Password" class="control-label">Password (leave blank to keep current)</label>
+                <label for="Password" class="control-label">Password </label>
                 <input name="Password" id="Password" class="form-control" type="password" />
-             
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
@@ -37,7 +36,12 @@
             </div>
             <div class="form-group">
                 <label for="Rol" class="control-label">Role</label>
-                <input name="Rol" id="Rol" class="form-control" value="@Model.Rol" required />
+                <select name="Rol" id="Gender" class="form-control" required>
+                    <option value="">-- Select Role --</option>
+                    <option value="Admin">Admin</option>
+                    <option value="Employee">Employee</option>
+                    <option value="Customer">Customer</option>
+                </select>
             </div>
             
             <h4>Person</h4>

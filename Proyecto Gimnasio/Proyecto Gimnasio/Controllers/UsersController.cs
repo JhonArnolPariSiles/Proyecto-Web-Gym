@@ -76,7 +76,7 @@ namespace Proyecto_Gimnasio.Controllers
                     Email = Email,
                     Password = BCrypt.Net.BCrypt.HashPassword(Password),
                     Rol = Rol,
-                    primarySession = false
+                    primarySession = true
                 };
 
                 _context.Users.Add(user);
