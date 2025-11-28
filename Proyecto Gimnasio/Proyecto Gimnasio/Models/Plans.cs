@@ -19,9 +19,13 @@ namespace Proyecto_Gimnasio.Models
 		[StringLength(500, MinimumLength = 20)]
 		public string? Description { get; set; }
 
+		[Required(ErrorMessage = "Sart Date date is required")]
+		[Display(Name = "START DATE")]
 		[DataType(DataType.Date)]
 		public DateTime StartDate { get; set; }
 
+		[Required(ErrorMessage = "End Date date is required")]
+		[Display(Name = "END DATE")]
 		[DataType(DataType.Date)]
 		public DateTime EndDate { get; set; }
 
