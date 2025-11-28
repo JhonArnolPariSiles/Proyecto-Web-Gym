@@ -1,0 +1,79 @@
+﻿@model Proyecto_Gimnasio.Models.User
+@{
+    ViewData["Title"] = "Create";
+}
+<h1>Create</h1>
+<h4>User</h4>
+<hr />
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">
+        <strong>Error:</strong> @ViewBag.Error
+    </div>
+}
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label for="Email" class="control-label">Email Address</label>
+                <input name="Email" id="Email" class="form-control" type="email" required />
+            </div>
+            <div class="form-group">
+                <label for="Password" class="control-label">Password</label>
+                <input name="Password" id="Password" class="form-control" type="password" required />
+            </div>
+            <div class="form-group">
+                <label for="Rol" class="control-label">Role</label>
+                <input name="Rol" id="Rol" class="form-control" required />
+            </div>
+
+            <h4>Person</h4>
+            <hr />
+
+            <div class="form-group">
+                <label for="Name" class="control-label">NAME</label>
+                <input name="Name" id="Name" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="LasName" class="control-label">LAST NAME</label>
+                <input name="LasName" id="LasName" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="SecondLastName" class="control-label">SECOND LAST NAME</label>
+                <input name="SecondLastName" id="SecondLastName" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="DateBirthay" class="control-label">Date of Birth</label>
+                <input name="DateBirthay" id="DateBirthay" type="date" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="Cnit" class="control-label">CNIT</label>
+                <input name="Cnit" id="Cnit" type="number" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="Gender" class="control-label">Gender</label>
+                <select name="Gender" id="Gender" class="form-control" required>
+                    <option value="">-- Select Gender --</option>
+                    <option value="M">M</option>
+                    <option value="F">F</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

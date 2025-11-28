@@ -19,6 +19,7 @@ namespace Proyecto_Gimnasio.Models
 		[DataType(DataType.Date)]
 		public DateTime DateSale { get; set; }
 		//m-m sale y productos 
+
 		public ICollection<SaleDetailsProducts> SaleDetailsProducts { get; set; }
 
 	}
