@@ -47,7 +47,7 @@ namespace Proyecto_Gimnasio.Controllers
         // GET: Users/Create
         public IActionResult Create()
         {
-            ViewBag.Roles = new SelectList(new[] { "Admin", "User", "Employee" });
+            ViewBag.Roles = new SelectList(new[] { "Admin", "Customer", "Employee" });
             return View();
         }
 
@@ -65,7 +65,7 @@ namespace Proyecto_Gimnasio.Controllers
                 if (await _context.Users.AnyAsync(u => u.Email == Email))
                 {
                     ModelState.AddModelError("Email", "Este email ya está registrado");
-                    ViewBag.Roles = new SelectList(new[] { "Admin", "User", "Employee" });
+                    ViewBag.Roles = new SelectList(new[] { "Admin", "Customer", "Employee" });
                     ViewBag.Error = "Email ya existe";
                     return View();
                 }
@@ -109,7 +109,7 @@ namespace Proyecto_Gimnasio.Controllers
                 {
                     ViewBag.Error += " | Inner: " + ex.InnerException.Message;
                 }
-                ViewBag.Roles = new SelectList(new[] { "Admin", "User", "Employee" });
+                ViewBag.Roles = new SelectList(new[] { "Admin", "Customer", "Employee" });
                 return View();
             }
         }
