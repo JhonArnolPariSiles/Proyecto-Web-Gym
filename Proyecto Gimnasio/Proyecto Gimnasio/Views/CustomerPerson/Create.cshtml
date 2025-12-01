@@ -1,48 +1,75 @@
 ﻿@model Proyecto_Gimnasio.Models.User
-
 @{
     ViewData["Title"] = "Create";
 }
-
 <h1>Create</h1>
-
-<h4>User</h4>
+<h4>Customer</h4>
 <hr />
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">
+        <strong>Error:</strong> @ViewBag.Error
+    </div>
+}
+
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Create">
+        <form asp-action="Create" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
             <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="primarySession" /> @Html.DisplayNameFor(model => model.primarySession)
-                </label>
+                <label for="Email" class="control-label">Email Address</label>
+                <input name="Email" id="Email" class="form-control" type="email" required />
             </div>
             <div class="form-group">
-                <label asp-for="Rol" class="control-label"></label>
-                <input asp-for="Rol" class="form-control" />
-                <span asp-validation-for="Rol" class="text-danger"></span>
+                <label for="Password" class="control-label">Password</label>
+                <input name="Password" id="Password" class="form-control" type="password" required />
             </div>
+
+            <h4>Person</h4>
+            <hr />
+
+            <div class="form-group">
+                <label for="Name" class="control-label">NAME</label>
+                <input name="Name" id="Name" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="LasName" class="control-label">LAST NAME</label>
+                <input name="LasName" id="LasName" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="SecondLastName" class="control-label">SECOND LAST NAME</label>
+                <input name="SecondLastName" id="SecondLastName" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="DateBirthay" class="control-label">Date of Birth</label>
+                <input name="DateBirthay" id="DateBirthay" type="date" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="Cnit" class="control-label">CNIT</label>
+                <input name="Cnit" id="Cnit" type="number" class="form-control" required />
+            </div>
+            <div class="form-group">
+                <label for="Gender" class="control-label">Gender</label>
+                <select name="Gender" id="Gender" class="form-control" required>
+                    <option value="">-- Select Gender --</option>
+                    <option value="M">M</option>
+                    <option value="F">F</option>
+                </select>
+            </div>
+
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
-
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
