@@ -55,13 +55,13 @@ namespace Proyecto_Gimnasio.Controllers
             
             var currentUserRole = User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Role)?.Value;
 
-            // Si es Employee, solo puede crear Customer
+          
             if (currentUserRole == "Employee")
             {
                 ViewBag.Roles = new SelectList(new[] { "Customer" });
                 ViewBag.IsEmployee = true;
             }
-            else // Si es Admin, puede crear todos los roles
+            else 
             {
                 ViewBag.Roles = new SelectList(new[] { "Admin", "Employee", "Customer" });
                 ViewBag.IsEmployee = false;
@@ -81,7 +81,7 @@ namespace Proyecto_Gimnasio.Controllers
         {
             try
             {
-                // Validar que Employee solo pueda crear Customer
+                
                 var currentUserRole = User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Role)?.Value;
 
                 if (currentUserRole == "Employee" && Rol != "Customer")
@@ -97,7 +97,7 @@ namespace Proyecto_Gimnasio.Controllers
                 {
                     ModelState.AddModelError("Email", "Este email ya está registrado");
 
-                    // Restaurar ViewBag según el rol
+                   
                     if (currentUserRole == "Employee")
                     {
                         ViewBag.Roles = new SelectList(new[] { "Customer" });
