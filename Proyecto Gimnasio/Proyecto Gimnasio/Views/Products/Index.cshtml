@@ -7,7 +7,10 @@
 <h1>Productos</h1>
 
 <p>
-    <a asp-action="Create" class="btn btn-primary">Crear Nuevo</a>
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-action="Create" class="btn btn-primary">Crear Nuevo</a>
+    }
 </p>
 
 <table class="table table-striped">
@@ -46,9 +49,22 @@
                 <td>@Html.DisplayFor(modelItem => item.Category.NameCategory)</td>
 
                 <td>
-                    <a class="btn btn-warning btn-sm" asp-action="Edit" asp-route-id="@item.IdProduct">Editar</a> |
-                    <a class="btn btn-info btn-sm" asp-action="Details" asp-route-id="@item.IdProduct">Detalles</a> |
-                    <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@item.IdProduct">Eliminar</a>
+
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a class="btn btn-warning btn-sm" asp-action="Edit" asp-route-id="@item.IdProduct">Editar</a>
+                    }
+
+                    @if (User.IsInRole("Admin") || User.IsInRole("Employee"))
+                    {
+                        <a class="btn btn-info btn-sm" asp-action="Details" asp-route-id="@item.IdProduct">Detalles</a>
+                    }
+
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@item.IdProduct">Eliminar</a>
+                    }
+
                 </td>
             </tr>
         }

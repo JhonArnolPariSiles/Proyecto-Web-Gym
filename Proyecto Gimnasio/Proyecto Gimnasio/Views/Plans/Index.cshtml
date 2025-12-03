@@ -49,9 +49,18 @@
                 @Html.DisplayFor(modelItem => item.EndDate)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.IdPlan">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdPlan">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdPlan">Delete</a>
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-action="Edit" asp-route-id="@item.IdPlan">Edit</a>
+                }
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-action="Details" asp-route-id="@item.IdPlan">Details</a>
+                }
+                @if (User.IsInRole("Admin"))
+                {
+                    <a asp-action="Delete" asp-route-id="@item.IdPlan">Delete</a>
+                }
             </td>
         </tr>
 }

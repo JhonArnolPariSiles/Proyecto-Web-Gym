@@ -48,8 +48,8 @@ namespace Proyecto_Gimnasio.Controllers
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, usuario.Email),
-                new Claim("IdUsuario", usuario.Id.ToString()), // Guardamos el ID para las Ventas
-                new Claim(ClaimTypes.Role, usuario.Rol) // <--- Aquí guardamos si es Admin/Cliente/Empleado
+                new Claim("IdUsuario", usuario.Id.ToString()),
+                new Claim(ClaimTypes.Role, usuario.Rol) 
             };
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -66,5 +66,9 @@ namespace Proyecto_Gimnasio.Controllers
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Login", "Acceso");
         }
-    }
+		public IActionResult LandingPage()
+		{
+			return View();
+		}
+	}
 }

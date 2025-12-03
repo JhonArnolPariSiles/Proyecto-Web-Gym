@@ -15,7 +15,6 @@ namespace Proyecto_Gimnasio.Models
         [Required(ErrorMessage = "Name Product is required")]
         [StringLength(200, ErrorMessage = "{0} must be: minimum {2} and maximum {1}", MinimumLength = 4)]
         [Display(Name = "NAME PRODUCT")]
-        [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Name must contain only letters")]
         public string NameProduct { get; set; }
 
         [Display(Name = "Image")]

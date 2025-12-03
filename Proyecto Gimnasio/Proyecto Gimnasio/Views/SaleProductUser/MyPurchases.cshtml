@@ -1,0 +1,44 @@
+﻿@model IEnumerable<Proyecto_Gimnasio.Models.Sale>
+
+<h2>Mis Compras</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-warning">
+        No has realizado ninguna compra todavía.
+    </div>
+}
+else
+{
+    @foreach (var sale in Model)
+    {
+        <div class="card mb-4">
+            <div class="card-header">
+                <strong>Compra realizada:</strong> @sale.DateSale.ToString("g")
+            </div>
+            <div class="card-body">
+                <p><strong>Comprador:</strong> @sale.Person?.Name ?? "Desconocido" (@sale.Person?.LasName ?? "")</p>
+
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Precio</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in sale.SaleDetailsProducts)
+                        {
+                            <tr>
+                                <td>@item.Product?.NameProduct ?? "Producto no disponible"</td>
+                                <td>@item.TotalPrice.ToString("C")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                <h5 class="text-end">Total: @sale.Total.ToString("C")</h5>
+            </div>
+        </div>
+    }
+}

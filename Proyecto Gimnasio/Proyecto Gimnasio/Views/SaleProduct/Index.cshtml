@@ -9,18 +9,30 @@
 
 <h2>Productos y Personas</h2>
 
-<div class="mb-3">
-    <a asp-action="PersonsIndex" class="btn btn-info">Ver todas las personas y sus compras</a>
-</div>
+<!-- 🔹 CUADRO DE COMPRA REALIZADA -->
+@if (TempData["ok"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <h4 class="alert-heading">¡Compra realizada!</h4>
+        <p>@TempData["ok"]</p>
+        <hr />
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
 
+<!-- 🔹 OTROS MENSAJES -->
 @if (TempData["msg"] != null)
 {
-    <div class="alert alert-success">@TempData["msg"]</div>
+    <div class="alert alert-info">@TempData["msg"]</div>
 }
 @if (TempData["error"] != null)
 {
     <div class="alert alert-danger">@TempData["error"]</div>
 }
+
+<div class="mb-3">
+    <a asp-action="PersonsIndex" class="btn btn-info">Ver todas las personas y sus compras</a>
+</div>
 
 <form asp-action="Index" method="get" class="mb-3">
     <input type="text" name="searchName" class="form-control" placeholder="Buscar persona..." value="@searchName" />
