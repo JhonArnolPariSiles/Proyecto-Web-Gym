@@ -1,0 +1,46 @@
+﻿@model IEnumerable<Proyecto_Gimnasio.Models.Product>
+
+@{
+    ViewData["Title"] = "Confirmar compra";
+    var person = ViewBag.Person as Proyecto_Gimnasio.Models.Person;
+}
+
+<h2>Confirmación de Compra</h2>
+
+<p>Compra para: <strong>@person?.Name @person?.LasName</strong></p>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-danger">No hay productos en el carrito.</div>
+    <a asp-action="Index" class="btn btn-primary">Volver</a>
+    return;
+}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Producto</th>
+            <th>Imagen</th>
+            <th>Precio</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var p in Model)
+        {
+            <tr>
+                <td>@p.NameProduct</td>
+                <td>
+                    <img src="~/@p.Image" width="100" />
+                </td>
+                <td>@p.Price.ToString("C")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h3 class="text-end">Total: @Model.Sum(x => x.Price).ToString("C")</h3>
+
+<form asp-action="CheckoutConfirm" method="post" class="mt-3">
+    <button type="submit" class="btn btn-success">Confirmar compra</button>
+    <a asp-action="Cart" class="btn btn-secondary">Volver al carrito</a>
+</form>

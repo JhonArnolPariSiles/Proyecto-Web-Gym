@@ -1,0 +1,45 @@
+﻿@model IEnumerable<Proyecto_Gimnasio.Models.Person>
+
+@{
+    ViewData["Title"] = "Personas y sus productos comprados";
+}
+
+<h2>Personas y sus productos</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Persona</th>
+            <th>Productos Comprados</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var person in Model)
+        {
+            <tr>
+                <td>@person.Name @person.LasName</td>
+                <td>
+                    @if (person.Sales != null && person.Sales.Any())
+                    {
+                        <ul>
+                            @foreach (var sale in person.Sales)
+                            {
+                                @foreach (var detail in sale.SaleDetailsProducts)
+                                {
+                                    <li>
+                                        @detail.Product.NameProduct -
+                                        @detail.TotalPrice.ToString("C")
+                                    </li>
+                                }
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <span>No tiene compras</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
