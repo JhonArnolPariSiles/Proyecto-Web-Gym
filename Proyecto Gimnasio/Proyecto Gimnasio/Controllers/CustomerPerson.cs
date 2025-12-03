@@ -1,35 +1,34 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Proyecto_Gimnasio.Data;
 using Proyecto_Gimnasio.Models;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using BCrypt.Net;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Proyecto_Gimnasio.Controllers
 {
-    [Authorize] 
-    public class UsersController : Controller
+    public class CustomerPersonController : Controller
     {
         private readonly AppDbContext _context;
 
-        public UsersController(AppDbContext context)
+        public CustomerPersonController(AppDbContext context)
         {
             _context = context;
         }
 
-        // GET: Users
-        [Authorize(Roles = "Admin,Employee")] 
+        // GET: CustomerPerson
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Users.Include(u => u.Person).ToListAsync());
+            var customers = await _context.Users
+                .Include(u => u.Person)
+                .Where(u => u.Rol == "Customer")
+                .ToListAsync();
+            return View(customers);
         }
 
-        // GET: Users/Details/5
-        [Authorize(Roles = "Admin,Employee")]
+        // GET: CustomerPerson/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -39,7 +38,7 @@ namespace Proyecto_Gimnasio.Controllers
 
             var user = await _context.Users
                 .Include(u => u.Person)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.Id == id && m.Rol == "Customer");
             if (user == null)
             {
                 return NotFound();
@@ -48,67 +47,25 @@ namespace Proyecto_Gimnasio.Controllers
             return View(user);
         }
 
-        // GET: Users/Create
-        [Authorize(Roles = "Admin,Employee")]
+        // GET: CustomerPerson/Create
         public IActionResult Create()
         {
-            
-            var currentUserRole = User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Role)?.Value;
-
-          
-            if (currentUserRole == "Employee")
-            {
-                ViewBag.Roles = new SelectList(new[] { "Customer" });
-                ViewBag.IsEmployee = true;
-            }
-            else 
-            {
-                ViewBag.Roles = new SelectList(new[] { "Admin", "Employee", "Customer" });
-                ViewBag.IsEmployee = false;
-            }
-
             return View();
         }
 
-        // POST: Users/Create
+        // POST: CustomerPerson/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,Employee")]
         public async Task<IActionResult> Create(
-            string Email, string Password, string Rol,
+            string Email, string Password,
             string Name, string LasName, string SecondLastName,
             DateTime DateBirthay, int Cnit, char Gender)
         {
             try
             {
-                
-                var currentUserRole = User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Role)?.Value;
-
-                if (currentUserRole == "Employee" && Rol != "Customer")
-                {
-                    ModelState.AddModelError("Rol", "Solo puedes crear usuarios con rol Customer");
-                    ViewBag.Roles = new SelectList(new[] { "Customer" });
-                    ViewBag.IsEmployee = true;
-                    ViewBag.Error = "No tienes permiso para crear este tipo de usuario";
-                    return View();
-                }
-
                 if (await _context.Users.AnyAsync(u => u.Email == Email))
                 {
                     ModelState.AddModelError("Email", "Este email ya está registrado");
-
-                   
-                    if (currentUserRole == "Employee")
-                    {
-                        ViewBag.Roles = new SelectList(new[] { "Customer" });
-                        ViewBag.IsEmployee = true;
-                    }
-                    else
-                    {
-                        ViewBag.Roles = new SelectList(new[] { "Admin", "Employee", "Customer" });
-                        ViewBag.IsEmployee = false;
-                    }
-
                     ViewBag.Error = "Email ya existe";
                     return View();
                 }
@@ -117,7 +74,7 @@ namespace Proyecto_Gimnasio.Controllers
                 {
                     Email = Email,
                     Password = BCrypt.Net.BCrypt.HashPassword(Password),
-                    Rol = Rol,
+                    Rol = "Customer",
                     primarySession = true
                 };
 
@@ -150,25 +107,11 @@ namespace Proyecto_Gimnasio.Controllers
                 {
                     ViewBag.Error += " | Inner: " + ex.InnerException.Message;
                 }
-
-                var currentUserRole = User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Role)?.Value;
-                if (currentUserRole == "Employee")
-                {
-                    ViewBag.Roles = new SelectList(new[] { "Customer" });
-                    ViewBag.IsEmployee = true;
-                }
-                else
-                {
-                    ViewBag.Roles = new SelectList(new[] { "Admin", "Employee", "Customer" });
-                    ViewBag.IsEmployee = false;
-                }
-
                 return View();
             }
         }
 
-        // GET: Users/Edit/5
-        [Authorize(Roles = "Admin,Employee")]
+        // GET: CustomerPerson/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -177,29 +120,20 @@ namespace Proyecto_Gimnasio.Controllers
             }
 
             var user = await _context.Users
-                 .Include(u => u.Person)
-                 .FirstOrDefaultAsync(u => u.Id == id);
+                .Include(u => u.Person)
+                .FirstOrDefaultAsync(u => u.Id == id && u.Rol == "Customer");
             if (user == null)
             {
                 return NotFound();
             }
-
-            
-            var currentUserRole = User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Role)?.Value;
-            if (currentUserRole == "Employee" && user.Rol != "Customer")
-            {
-                return Forbid(); 
-            }
-
             return View(user);
         }
 
-        // POST: Users/Edit/5
+        // POST: CustomerPerson/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin,Employee")]
         public async Task<IActionResult> Edit(int id,
-            string Email, string Password, bool primarySession, string Rol,
+            string Email, string Password, bool primarySession,
             int IdPerson, string Name, string LasName, string SecondLastName,
             DateTime DateBirthay, int Cnit, char Gender, int UserId)
         {
@@ -211,26 +145,9 @@ namespace Proyecto_Gimnasio.Controllers
             try
             {
                 var user = await _context.Users.FindAsync(id);
-                if (user == null)
+                if (user == null || user.Rol != "Customer")
                 {
                     return NotFound();
-                }
-
-                
-                var currentUserRole = User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Role)?.Value;
-                if (currentUserRole == "Employee" && user.Rol != "Customer")
-                {
-                    return Forbid();
-                }
-
-                
-                if (currentUserRole == "Employee" && Rol != "Customer")
-                {
-                    ViewBag.Error = "No tienes permiso para cambiar el rol";
-                    var userWithPerson = await _context.Users
-                        .Include(u => u.Person)
-                        .FirstOrDefaultAsync(u => u.Id == id);
-                    return View(userWithPerson);
                 }
 
                 user.Email = Email;
@@ -239,7 +156,7 @@ namespace Proyecto_Gimnasio.Controllers
                     user.Password = BCrypt.Net.BCrypt.HashPassword(Password);
                 }
                 user.primarySession = primarySession;
-                user.Rol = Rol;
+                user.Rol = "Customer";
 
                 _context.Update(user);
 
@@ -271,8 +188,7 @@ namespace Proyecto_Gimnasio.Controllers
             }
         }
 
-        // GET: Users/Delete/5
-        [Authorize(Roles = "Admin")] 
+        // GET: CustomerPerson/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -282,7 +198,7 @@ namespace Proyecto_Gimnasio.Controllers
 
             var user = await _context.Users
                 .Include(u => u.Person)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .FirstOrDefaultAsync(m => m.Id == id && m.Rol == "Customer");
             if (user == null)
             {
                 return NotFound();
@@ -291,15 +207,14 @@ namespace Proyecto_Gimnasio.Controllers
             return View(user);
         }
 
-        // POST: Users/Delete/5
+        // POST: CustomerPerson/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")] 
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var user = await _context.Users
                 .Include(u => u.Person)
-                .FirstOrDefaultAsync(u => u.Id == id);
+                .FirstOrDefaultAsync(u => u.Id == id && u.Rol == "Customer");
             if (user != null)
             {
                 if (user.Person != null)
@@ -315,7 +230,7 @@ namespace Proyecto_Gimnasio.Controllers
 
         private bool UserExists(int id)
         {
-            return _context.Users.Any(e => e.Id == id);
+            return _context.Users.Any(e => e.Id == id && e.Rol == "Customer");
         }
     }
 }

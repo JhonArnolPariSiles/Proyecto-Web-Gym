@@ -10,19 +10,42 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="IdProduct" />
+
             <div class="form-group">
                 <label asp-for="NameProduct" class="control-label"></label>
                 <input asp-for="NameProduct" class="form-control" />
                 <span asp-validation-for="NameProduct" class="text-danger"></span>
             </div>
+
+
             <div class="form-group">
                 <label asp-for="Image" class="control-label"></label>
-                <input asp-for="Image" class="form-control" />
-                <span asp-validation-for="Image" class="text-danger"></span>
+                <br />
+                @if (!string.IsNullOrEmpty(Model.Image))
+                {
+                    <img src="~/@Model.Image" style="max-width:150px;max-height:150px;" />
+                }
             </div>
+
+
+            <div class="form-group">
+                <label asp-for="ImageFile" class="control-label"></label>
+                <input asp-for="ImageFile" type="file" class="form-control"
+                       onchange="previewImage(this,'imgPreviewEdit')" />
+                <span asp-validation-for="ImageFile" class="text-danger"></span>
+            </div>
+
+ 
+            <div class="form-group">
+                <img id="imgPreviewEdit" style="max-width:150px;max-height:150px;display:none;" />
+            </div>
+
+
+            <input asp-for="Image" type="hidden" />
+
             <div class="form-group">
                 <label asp-for="Stock" class="control-label"></label>
                 <input asp-for="Stock" class="form-control" />
@@ -55,5 +78,21 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        function previewImage(input, imgId) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    var img = document.getElementById(imgId);
+                    img.style.display = 'block';
+                    img.src = e.target.result;
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
 }

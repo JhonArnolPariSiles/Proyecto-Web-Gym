@@ -1,7 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,10 +14,12 @@ namespace Proyecto_Gimnasio.Controllers
     public class ProductsController : Controller
     {
         private readonly AppDbContext _context;
+        private readonly IWebHostEnvironment _env;
 
-        public ProductsController(AppDbContext context)
+        public ProductsController(AppDbContext context, IWebHostEnvironment env)
         {
             _context = context;
+            _env = env;
         }
 
         // GET: Products
@@ -53,18 +56,41 @@ namespace Proyecto_Gimnasio.Controllers
         }
 
         // POST: Products/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdProduct,NameProduct,Image,Stock,Price,ExpirationDate,IdCategory")] Product product)
+        public async Task<IActionResult> Create([Bind("IdProduct,NameProduct,Image,ImageFile,Stock,Price,ExpirationDate,IdCategory")] Product product)
         {
+            try
+            {
+                if (product.ImageFile != null && product.ImageFile.Length > 0)
+                {
+                    var uploadsFolder = Path.Combine(_env.WebRootPath ?? "", "Images");
+                    if (!Directory.Exists(uploadsFolder))
+                        Directory.CreateDirectory(uploadsFolder);
+
+                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(product.ImageFile.FileName);
+                    var filePath = Path.Combine(uploadsFolder, fileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await product.ImageFile.CopyToAsync(stream);
+                    }
+
+                    product.Image = Path.Combine("Images", fileName).Replace("\\", "/");
+                }
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, "Error guardando la imagen: " + ex.Message);
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(product);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["IdCategory"] = new SelectList(_context.Categories, "IdCategory", "NameCategory", product.IdCategory);
             return View(product);
         }
@@ -87,15 +113,29 @@ namespace Proyecto_Gimnasio.Controllers
         }
 
         // POST: Products/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdProduct,NameProduct,Image,Stock,Price,ExpirationDate,IdCategory")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("IdProduct,NameProduct,Image,ImageFile,Stock,Price,ExpirationDate,IdCategory")] Product product)
         {
             if (id != product.IdProduct)
             {
                 return NotFound();
+            }
+            if (product.ImageFile != null && product.ImageFile.Length > 0)
+            {
+                var uploadsFolder = Path.Combine(_env.WebRootPath, "Images");
+                if (!Directory.Exists(uploadsFolder))
+                    Directory.CreateDirectory(uploadsFolder);
+
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(product.ImageFile.FileName);
+                var filePath = Path.Combine(uploadsFolder, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await product.ImageFile.CopyToAsync(stream);
+                }
+
+                product.Image = Path.Combine("Images", fileName).Replace("\\", "/");
             }
 
             if (ModelState.IsValid)
@@ -118,6 +158,7 @@ namespace Proyecto_Gimnasio.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["IdCategory"] = new SelectList(_context.Categories, "IdCategory", "NameCategory", product.IdCategory);
             return View(product);
         }
