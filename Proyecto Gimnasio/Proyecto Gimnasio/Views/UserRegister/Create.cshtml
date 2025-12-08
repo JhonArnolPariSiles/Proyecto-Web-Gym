@@ -1,0 +1,79 @@
+﻿@model Proyecto_Gimnasio.Models.User
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+
+
+<link rel="stylesheet" href="~/css/UserRegister.css" />
+
+<h1>User Registration</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Person.Name" class="control-label">Name</label>
+                <input asp-for="Person.Name" class="form-control" />
+                <span asp-validation-for="Person.Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Person.LasName" class="control-label">Last Name</label>
+                <input asp-for="Person.LasName" class="form-control" />
+                <span asp-validation-for="Person.LasName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Person.SecondLastName" class="control-label">Second Last Name</label>
+                <input asp-for="Person.SecondLastName" class="form-control" />
+                <span asp-validation-for="Person.SecondLastName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Person.DateBirthay" class="control-label">Date of Birth</label>
+                <input asp-for="Person.DateBirthay" type="date" class="form-control" />
+                <span asp-validation-for="Person.DateBirthay" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Person.Cnit" class="control-label">CNIT</label>
+                <input asp-for="Person.Cnit" class="form-control" />
+                <span asp-validation-for="Person.Cnit" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Person.Gender" class="control-label">Gender</label>
+                <select asp-for="Person.Gender" class="form-control">
+                    <option value="">Select...</option>
+                    <option value="M">Male</option>
+                    <option value="F">Female</option>
+                </select>
+                <span asp-validation-for="Person.Gender" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Email" class="control-label">Email Address</label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Register" class="btn btn-primary w-100" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

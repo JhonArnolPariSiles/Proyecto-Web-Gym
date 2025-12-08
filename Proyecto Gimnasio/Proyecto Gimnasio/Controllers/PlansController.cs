@@ -50,12 +50,33 @@ namespace Proyecto_Gimnasio.Controllers
         }
 
         // POST: Plans/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdPlan,NamePlan,Price,Description,StartDate,EndDate")] Plans plans)
         {
+            // --- INICIO VALIDACIONES AGREGADAS ---
+
+            // 1. Validar Precio (Mayor o igual a 1)
+            if (plans.Price < 1)
+            {
+                ModelState.AddModelError("Price", "El precio debe ser mayor o igual a 1.");
+            }
+
+            // 2. Validar Fecha de Inicio (No puede ser pasada)
+            if (plans.StartDate.Date < DateTime.Now.Date)
+            {
+                ModelState.AddModelError("StartDate", "La fecha de inicio no puede ser anterior a hoy.");
+            }
+
+            // 3. Validar Duración (Mínimo 30 días)
+            TimeSpan diferencia = plans.EndDate - plans.StartDate;
+            if (diferencia.TotalDays < 30)
+            {
+                ModelState.AddModelError("EndDate", "El plan debe durar al menos 30 días.");
+            }
+
+            // --- FIN VALIDACIONES AGREGADAS ---
+
             if (ModelState.IsValid)
             {
                 _context.Add(plans);
@@ -82,8 +103,6 @@ namespace Proyecto_Gimnasio.Controllers
         }
 
         // POST: Plans/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdPlan,NamePlan,Price,Description,StartDate,EndDate")] Plans plans)
@@ -92,6 +111,26 @@ namespace Proyecto_Gimnasio.Controllers
             {
                 return NotFound();
             }
+
+            // --- INICIO VALIDACIONES AGREGADAS (Mismas que en Create) ---
+
+            if (plans.Price < 1)
+            {
+                ModelState.AddModelError("Price", "El precio debe ser mayor o igual a 1.");
+            }
+
+            if (plans.StartDate.Date < DateTime.Now.Date)
+            {
+                ModelState.AddModelError("StartDate", "La fecha de inicio no puede ser anterior a hoy.");
+            }
+
+            TimeSpan diferencia = plans.EndDate - plans.StartDate;
+            if (diferencia.TotalDays < 30)
+            {
+                ModelState.AddModelError("EndDate", "El plan debe durar al menos 30 días.");
+            }
+
+            // --- FIN VALIDACIONES AGREGADAS ---
 
             if (ModelState.IsValid)
             {

@@ -9,7 +9,6 @@
 
 <h2>Productos y Personas</h2>
 
-<!-- 🔹 CUADRO DE COMPRA REALIZADA -->
 @if (TempData["ok"] != null)
 {
     <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -20,7 +19,6 @@
     </div>
 }
 
-<!-- 🔹 OTROS MENSAJES -->
 @if (TempData["msg"] != null)
 {
     <div class="alert alert-info">@TempData["msg"]</div>
@@ -35,57 +33,72 @@
 </div>
 
 <form asp-action="Index" method="get" class="mb-3">
-    <input type="text" name="searchName" class="form-control" placeholder="Buscar persona..." value="@searchName" />
-    <button type="submit" class="btn btn-primary mt-2">Buscar</button>
+    <div class="input-group">
+        <input type="text" name="searchName" class="form-control" placeholder="Buscar persona por nombre..." value="@searchName" />
+        <button type="submit" class="btn btn-primary">Buscar</button>
+    </div>
 </form>
 
 @if (persons != null && persons.Any())
 {
-    <table class="table table-bordered mb-4">
-        <thead>
-            <tr>
-                <th>Persona</th>
-                <th>Productos Comprados</th>
-                <th>Seleccionar</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var person in persons)
-            {
-                <tr class="@(person.IdPerson == selectedPersonId ? "table-success" : "")">
-                    <td>@person.Name @person.LasName</td>
-                    <td>
-                        @if (person.Sales != null && person.Sales.Any())
-                        {
-                            <ul>
-                                @foreach (var sale in person.Sales)
-                                {
-                                    @foreach (var sd in sale.SaleDetailsProducts)
-                                    {
-                                        <li>@sd.Product.NameProduct (@sd.TotalPrice.ToString("C"))</li>
-                                    }
-                                }
-                            </ul>
-                        }
-                        else
-                        {
-                            <span>No tiene compras</span>
-                        }
-                    </td>
-                    <td>
-                        <form asp-action="SelectPerson" method="post">
-                            <input type="hidden" name="personId" value="@person.IdPerson" />
-                            <button type="submit" class="btn btn-success btn-sm">Seleccionar</button>
-                        </form>
-                    </td>
+    <div class="table-responsive">
+        <table class="table table-bordered mb-4">
+            <thead class="table-dark">
+                <tr>
+                    <th>Persona</th>
+                    <th>Historial de Compras</th>
+                    <th>Acción</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var person in persons)
+                {
+                    // Resalta la fila si es la persona seleccionada
+                    <tr class="@(person.IdPerson == selectedPersonId ? "table-success" : "")">
+                        <td>
+                            <strong>@person.Name @person.LasName</strong><br />
+                            <small class="text-muted">CNIT: @person.Cnit</small>
+                        </td>
+                        <td>
+                            @if (person.Sales != null && person.Sales.Any())
+                            {
+                                <ul style="font-size: 0.9em;">
+                                    @foreach (var sale in person.Sales)
+                                    {
+                                        @foreach (var sd in sale.SaleDetailsProducts)
+                                        {
+                                            <li>@sd.Product.NameProduct - (@sd.Quantity un.) - @sd.TotalPrice.ToString("C")</li>
+                                        }
+                                    }
+                                </ul>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Sin compras previas</span>
+                            }
+                        </td>
+                        <td>
+                            <form asp-action="SelectPerson" method="post">
+                                <input type="hidden" name="personId" value="@person.IdPerson" />
+                                @if (person.IdPerson == selectedPersonId)
+                                {
+                                    <button type="button" class="btn btn-success btn-sm" disabled>Seleccionado</button>
+                                }
+                                else
+                                {
+                                    <button type="submit" class="btn btn-outline-success btn-sm">Seleccionar</button>
+                                }
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 }
 else
 {
-    <div class="alert alert-warning">No se encontraron personas.</div>
+    <div class="alert alert-warning">No se encontraron personas con ese criterio.</div>
 }
 
 <hr />
@@ -95,30 +108,72 @@ else
 <div class="row">
     @foreach (var product in Model)
     {
-        <div class="col-md-4 mb-3">
-            <div class="card">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
 
                 @if (!string.IsNullOrEmpty(product.Image))
                 {
-                    <img src="~/@product.Image" class="card-img-top" style="height:200px;object-fit:cover;" />
+                    <img src="~/@product.Image" class="card-img-top" style="height:200px; object-fit:cover;" alt="@product.NameProduct" />
+                }
+                else
+                {
+                    <div class="d-flex align-items-center justify-content-center bg-light" style="height:200px;">
+                        <span class="text-muted">Sin Imagen</span>
+                    </div>
                 }
 
                 <div class="card-body">
-                    <h4>@product.NameProduct</h4>
-                    <p>Categoría: @product.Category?.NameCategory</p>
-                    <p>Stock: @product.Stock</p>
-                    <h5>Precio: @product.Price.ToString("C")</h5>
+                    <h5 class="card-title">@product.NameProduct</h5>
+                    <p class="card-text mb-1">Categoría: <span class="badge bg-secondary">@product.Category?.NameCategory</span></p>
 
-                    <form asp-action="Add" method="post">
+                    <p class="card-text mb-1">
+                        Stock:
+                        @if (product.Stock > 0)
+                        {
+                            <span class="fw-bold text-success">@product.Stock unidades</span>
+                        }
+                        else
+                        {
+                            <span class="fw-bold text-danger">Agotado</span>
+                        }
+                    </p>
+
+                    <h4 class="text-primary mt-2">@product.Price.ToString("C")</h4>
+
+                    <form asp-action="Add" method="post" class="mt-3">
                         <input type="hidden" name="id" value="@product.IdProduct" />
-                        <button type="submit" class="btn btn-primary" @(selectedPersonId == 0 ? "disabled" : "")>
-                            Agregar al carrito
+
+                        <div class="input-group mb-2">
+                            <span class="input-group-text">Cant.</span>
+                            <input type="number" name="quantity" value="1" min="1" max="@product.Stock" class="form-control" />
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100"
+                                @(selectedPersonId == 0 || product.Stock < 1 ? "disabled" : "")>
+
+                            @if (selectedPersonId == 0)
+                            {
+                                <span>Seleccione Persona primero</span>
+                            }
+                            else if (product.Stock < 1)
+                            {
+                                <span>Sin Stock</span>
+                            }
+                            else
+                            {
+                                <span>Agregar al carrito</span>
+                            }
                         </button>
                     </form>
+
                 </div>
             </div>
         </div>
     }
 </div>
 
-<a asp-action="Cart" class="btn btn-dark mt-3">Ir al carrito</a>
+<div class="d-grid gap-2 mt-4 mb-5">
+    <a asp-action="Cart" class="btn btn-dark btn-lg">
+        Ver Carrito y Confirmar Compra
+    </a>
+</div>

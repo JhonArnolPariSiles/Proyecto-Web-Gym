@@ -1,0 +1,122 @@
+﻿/* --- VARIABLES (Las mismas de tu Landing) --- */
+:root {
+    --negro-base: #121212;
+    --negro-claro: #1E1E1E;
+    --azul-electrico: #00509D;
+    --azul-oscuro: #002952;
+    --amarillo-neon: #FFD500;
+    --blanco: #F5F5F5;
+    --gris: #A0A0A0;
+}
+
+/* --- FONDO Y TEXTO GENERAL --- */
+body {
+    background-color: var(--negro-base);
+    color: var(--blanco);
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+h1 {
+    text-align: center;
+    color: var(--amarillo-neon);
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+hr {
+    border-color: var(--azul-electrico);
+    opacity: 0.5;
+}
+
+/* --- FORMULARIOS (Sobrescribiendo Bootstrap) --- */
+
+/* Labels */
+label.control-label {
+    color: var(--gris);
+    font-weight: 600;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+/* Inputs (Cajas de texto, fecha, selects) */
+.form-control {
+    background-color: var(--negro-claro);
+    border: 1px solid #333;
+    color: var(--blanco);
+    border-radius: 4px;
+    padding: 10px 15px;
+}
+
+    /* Estado Focus (Cuando haces clic en el input) */
+    .form-control:focus {
+        background-color: var(--negro-claro);
+        border-color: var(--azul-electrico);
+        color: var(--blanco);
+        box-shadow: 0 0 8px rgba(0, 80, 157, 0.4); /* Resplandor azul */
+    }
+
+    /* Arreglo para el placeholder (texto de ayuda) */
+    .form-control::placeholder {
+        color: #555;
+    }
+
+/* Inputs de Fecha (icono del calendario) */
+input[type="date"] {
+    color-scheme: dark; /* Hace que el calendario emergente sea oscuro */
+}
+
+/* --- BOTÓN DE REGISTRO --- */
+/* Convertimos el btn-primary de bootstrap en tu btn-cta */
+.btn-primary {
+    background-color: var(--amarillo-neon);
+    color: var(--negro-base);
+    border: none;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 12px;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+}
+
+    .btn-primary:hover {
+        background-color: #e6c200; /* Un poco más oscuro al pasar el mouse */
+        color: #000;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 213, 0, 0.3);
+    }
+
+/* --- ENLACES --- */
+a {
+    color: var(--azul-electrico);
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+    a:hover {
+        color: var(--amarillo-neon);
+    }
+
+/* --- MENSAJES DE ERROR --- */
+.text-danger {
+    color: #ff4d4d !important; /* Rojo brillante para que se lea sobre negro */
+    font-size: 0.85rem;
+}
+
+/* --- CONTENEDOR CENTRAL (Opcional, para centrar mejor el form) --- */
+.row {
+    justify-content: center; /* Centra el formulario en la pantalla */
+    margin-top: 40px;
+}
+
+.col-md-6 {
+    background-color: rgba(30, 30, 30, 0.5); /* Fondo sutil detrás del form */
+    padding: 30px;
+    border-radius: 10px;
+    border: 1px solid #333;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
