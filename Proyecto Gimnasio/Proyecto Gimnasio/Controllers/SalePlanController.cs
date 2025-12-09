@@ -2,237 +2,159 @@
 using Microsoft.EntityFrameworkCore;
 using Proyecto_Gimnasio.Data;
 using Proyecto_Gimnasio.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Proyecto_Gimnasio.Controllers
 {
-    public class SalePlanController : Controller
-    {
-        private readonly AppDbContext _context;
-        private static List<int> CartPlans = new List<int>();
-        private static int SelectedPersonId = 0;
+	public class SalePlanController : Controller
+	{
+		private readonly AppDbContext _context;
+		private static List<int> CartPlans = new List<int>();
+		private static int SelectedPersonId = 0; 
 
-        public SalePlanController(AppDbContext context)
-        {
-            _context = context;
-        }
+		public SalePlanController(AppDbContext context)
+		{
+			_context = context;
+		}
 
+		// Mostrar planes y permitir buscar personas
+		[HttpGet]
+		public async Task<IActionResult> Index(string searchName = "")
+		{
+			var plans = await _context.Planss.ToListAsync();
 
-        [HttpGet]
-        public async Task<IActionResult> Index(string searchName = "")
-        {
-            var plans = await _context.Planss.ToListAsync();
+			var persons = string.IsNullOrEmpty(searchName)
+				? await _context.Persons.ToListAsync()
+				: await _context.Persons
+					.Where(p => (p.Name + " " + p.LasName).Contains(searchName))
+					.ToListAsync();
 
+			ViewBag.Persons = persons;
+			ViewBag.SelectedPersonId = SelectedPersonId;
+			ViewBag.SearchName = searchName; 
 
-            var personsQuery = _context.Persons
-                .Include(p => p.User)
-                .Where(p => p.User.Rol == "Customer");
-
-            var persons = string.IsNullOrEmpty(searchName)
-                ? await personsQuery.ToListAsync()
-                : await personsQuery
-                    .Where(p => (p.Name + " " + p.LasName + " " + p.SecondLastName).Contains(searchName))
-                    .ToListAsync();
-
-            ViewBag.Persons = persons;
-            ViewBag.SelectedPersonId = SelectedPersonId;
-            ViewBag.SearchName = searchName;
-
-            return View(plans);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> SelectPerson(int personId)
-        {
-
-            var person = await _context.Persons
-                .Include(p => p.User)
-                .FirstOrDefaultAsync(p => p.IdPerson == personId);
-
-            if (person == null)
-            {
-                TempData["error"] = "Persona no encontrada.";
-                return RedirectToAction("Index");
-            }
-
-            if (person.User.Rol != "Customer")
-            {
-                TempData["error"] = "Solo se pueden seleccionar clientes (Customers).";
-                return RedirectToAction("Index");
-            }
-
-            SelectedPersonId = personId;
-            TempData["msg"] = "Persona seleccionada para la compra.";
-            return RedirectToAction("Index");
-        }
-
-        [HttpPost]
-        public IActionResult Add(int id)
-        {
-            if (SelectedPersonId == 0)
-            {
-                TempData["error"] = "Primero seleccione una persona.";
-                return RedirectToAction("Index");
-            }
+			return View(plans);
+		}
 
 
-            if (!CartPlans.Contains(id))
-            {
-                CartPlans.Add(id);
-                TempData["msg"] = "Plan agregado al carrito.";
-            }
-            else
-            {
-                TempData["error"] = "Este plan ya está en el carrito.";
-            }
+		[HttpPost]
+		public IActionResult SelectPerson(int personId)
+		{
+			SelectedPersonId = personId;
+			TempData["msg"] = "Persona seleccionada para la compra.";
+			return RedirectToAction("Index");
+		}
 
-            return RedirectToAction("Index");
-        }
+		[HttpPost]
+		public IActionResult Add(int id)
+		{
+			if (SelectedPersonId == 0)
+			{
+				TempData["error"] = "Primero seleccione una persona.";
+				return RedirectToAction("Index");
+			}
 
-        [HttpGet]
-        public async Task<IActionResult> Cart()
-        {
-            var plans = await _context.Planss
-                .Where(p => CartPlans.Contains(p.IdPlan))
-                .ToListAsync();
+			CartPlans.Add(id);
+			TempData["msg"] = "Plan agregado al carrito.";
+			return RedirectToAction("Index");
+		}
 
+		[HttpGet]
+		public async Task<IActionResult> Cart()
+		{
+			var plans = await _context.Planss
+				.Where(p => CartPlans.Contains(p.IdPlan))
+				.ToListAsync();
 
-            Person selectedPerson = null;
-            if (SelectedPersonId > 0)
-            {
-                selectedPerson = await _context.Persons
-                    .Include(p => p.User)
-                    .FirstOrDefaultAsync(p => p.IdPerson == SelectedPersonId);
-            }
+			ViewBag.SelectedPersonId = SelectedPersonId;
+			return View(plans);
+		}
 
-            ViewBag.SelectedPerson = selectedPerson;
-            ViewBag.SelectedPersonId = SelectedPersonId;
-            return View(plans);
-        }
+		[HttpPost]
+		public IActionResult Remove(int id)
+		{
+			if (CartPlans.Contains(id))
+				CartPlans.Remove(id);
 
-        [HttpPost]
-        public IActionResult Remove(int id)
-        {
-            if (CartPlans.Contains(id))
-                CartPlans.Remove(id);
+			return RedirectToAction("Cart");
+		}
 
-            TempData["msg"] = "Plan eliminado del carrito.";
-            return RedirectToAction("Cart");
-        }
+		[HttpGet]
+		public async Task<IActionResult> Checkout()
+		{
+			if (CartPlans.Count == 0 || SelectedPersonId == 0)
+			{
+				TempData["error"] = "El carrito está vacío o no se ha seleccionado persona.";
+				return RedirectToAction("Index");
+			}
 
-        [HttpGet]
-        public async Task<IActionResult> Checkout()
-        {
-            if (CartPlans.Count == 0 || SelectedPersonId == 0)
-            {
-                TempData["error"] = "El carrito está vacío o no se ha seleccionado persona.";
-                return RedirectToAction("Index");
-            }
+			var plans = await _context.Planss
+				.Where(p => CartPlans.Contains(p.IdPlan))
+				.ToListAsync();
 
-            var plans = await _context.Planss
-                .Where(p => CartPlans.Contains(p.IdPlan))
-                .ToListAsync();
+			ViewBag.Person = await _context.Persons.FindAsync(SelectedPersonId);
+			return View(plans);
+		}
 
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> CheckoutConfirm()
+		{
+			if (CartPlans.Count == 0 || SelectedPersonId == 0)
+			{
+				TempData["error"] = "No hay planes o no se ha seleccionado persona.";
+				return RedirectToAction("Index");
+			}
 
-            var person = await _context.Persons
-                .Include(p => p.User)
-                .FirstOrDefaultAsync(p => p.IdPerson == SelectedPersonId);
+			var plans = await _context.Planss
+				.Where(p => CartPlans.Contains(p.IdPlan))
+				.ToListAsync();
 
-            ViewBag.Person = person;
-            return View(plans);
-        }
+			var sale = new Sale
+			{
+				IdPerson = SelectedPersonId,
+				Total = plans.Sum(p => p.Price),
+				DateSale = DateTime.Now,
+				UserId = 1,
+				RegisterDate = DateTime.Now,
+				Status = true
+			};
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CheckoutConfirm()
-        {
-            if (CartPlans.Count == 0 || SelectedPersonId == 0)
-            {
-                TempData["error"] = "No hay planes o no se ha seleccionado persona.";
-                return RedirectToAction("Index");
-            }
+			_context.Sales.Add(sale);
+			await _context.SaveChangesAsync();
 
+			foreach (var plan in plans)
+			{
+				var detail = new SaleDetailsPlans
+				{
+					IdSale = sale.IdSale,
+					IdPlan = plan.IdPlan,
+					Quantity = 1,
+					TotalPrice = plan.Price
+				};
+				_context.saleDetailsPlans.Add(detail);
+			}
 
-            var person = await _context.Persons
-                .Include(p => p.User)
-                .FirstOrDefaultAsync(p => p.IdPerson == SelectedPersonId);
+			await _context.SaveChangesAsync();
 
-            if (person == null || person.User.Rol != "Customer")
-            {
-                TempData["error"] = "La persona seleccionada no es válida.";
-                CartPlans.Clear();
-                SelectedPersonId = 0;
-                return RedirectToAction("Index");
-            }
+			CartPlans.Clear();
+			SelectedPersonId = 0;
 
-            var plans = await _context.Planss
-                .Where(p => CartPlans.Contains(p.IdPlan))
-                .ToListAsync();
+			TempData["ok"] = "Compra realizada con éxito.";
+			return RedirectToAction("Index");
+		}
 
+		// Mostrar personas y los planes que tienen
+		[HttpGet]
+		public async Task<IActionResult> PersonsIndex()
+		{
+			var persons = await _context.Persons
+				.Include(p => p.Sales)
+					.ThenInclude(s => s.saleDetailsPlans)
+						.ThenInclude(sd => sd.Plans)
+				.ToListAsync();
 
-            var currentUserId = User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-            int userId = string.IsNullOrEmpty(currentUserId) ? 1 : int.Parse(currentUserId);
+			return View(persons);
+		}
+	}
 
-            var sale = new Sale
-            {
-                IdPerson = SelectedPersonId,
-                Total = plans.Sum(p => p.Price),
-                DateSale = DateTime.Now,
-                UserId = userId,
-                RegisterDate = DateTime.Now,
-                Status = true
-            };
-
-            _context.Sales.Add(sale);
-            await _context.SaveChangesAsync();
-
-            foreach (var plan in plans)
-            {
-                var detail = new SaleDetailsPlans
-                {
-                    IdSale = sale.IdSale,
-                    IdPlan = plan.IdPlan,
-                    Quantity = 1,
-                    TotalPrice = plan.Price
-                };
-                _context.saleDetailsPlans.Add(detail);
-            }
-
-            await _context.SaveChangesAsync();
-
-            CartPlans.Clear();
-            SelectedPersonId = 0;
-
-            TempData["ok"] = "Compra realizada con éxito.";
-            return RedirectToAction("Index");
-        }
-
-
-        [HttpGet]
-        public async Task<IActionResult> PersonsIndex()
-        {
-
-            var persons = await _context.Persons
-                .Include(p => p.User)
-                .Include(p => p.Sales)
-                    .ThenInclude(s => s.saleDetailsPlans)
-                        .ThenInclude(sd => sd.Plans)
-                .Where(p => p.User.Rol == "Customer")
-                .ToListAsync();
-
-            return View(persons);
-        }
-
-        [HttpPost]
-        public IActionResult ClearCart()
-        {
-            CartPlans.Clear();
-            SelectedPersonId = 0;
-            TempData["msg"] = "Carrito limpiado.";
-            return RedirectToAction("Index");
-        }
-    }
 }

@@ -11,25 +11,19 @@ namespace Proyecto_Gimnasio.Models
 		[Required(ErrorMessage = "Name is required")]
 		[StringLength(20, ErrorMessage = "{0} must be: minimum {2} and maximum {1}", MinimumLength = 4)]
 		[Display(Name = "NAME")]
-        [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "Name must contain only letters and spaces")]
-
-
-        public string Name { get; set; }
+		[RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Name must contain only letters")]
+		public string Name { get; set; }
 
 		[Required(ErrorMessage = "Last Name is required")]
 		[StringLength(30, ErrorMessage = "{0} must be: minimum {2} and maximum {1}", MinimumLength = 5)]
 		[Display(Name = "LAST NAME")]
-        [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "Name must contain only letters and spaces")]
-
-
-        public string LasName { get; set; }
+		[RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Last Name must contain only letters")]
+		public string LasName { get; set; }
 
 		[StringLength(30, ErrorMessage = "{0} must be: minimum {2} and maximum {1}", MinimumLength = 5)]
 		[Display(Name = "SECOND LAST NAME")]
-        [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "Name must contain only letters and spaces")]
-
-
-        public string? SecondLastName { get; set; }
+		[RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Second Last Name must contain only letters")]
+		public string? SecondLastName { get; set; }
 
 		[Required(ErrorMessage = "Date of birth is required")]
 		[DataType(DataType.Date)]

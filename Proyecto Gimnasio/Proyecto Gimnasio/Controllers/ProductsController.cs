@@ -60,12 +60,6 @@ namespace Proyecto_Gimnasio.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdProduct,NameProduct,Image,ImageFile,Stock,Price,ExpirationDate,IdCategory")] Product product)
         {
-            // Validación de fecha
-            if (product.ExpirationDate.Date < DateTime.Today)
-            {
-                ModelState.AddModelError("ExpirationDate", "Expiration date cannot be before today");
-            }
-
             try
             {
                 if (product.ImageFile != null && product.ImageFile.Length > 0)
@@ -127,13 +121,6 @@ namespace Proyecto_Gimnasio.Controllers
             {
                 return NotFound();
             }
-
-            // Validación de fecha
-            if (product.ExpirationDate.Date < DateTime.Today)
-            {
-                ModelState.AddModelError("ExpirationDate", "Expiration date cannot be before today");
-            }
-
             if (product.ImageFile != null && product.ImageFile.Length > 0)
             {
                 var uploadsFolder = Path.Combine(_env.WebRootPath, "Images");
