@@ -79,7 +79,7 @@ namespace Proyecto_Gimnasio.Controllers
             {
                 var currentUserRole = User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Role)?.Value;
 
-                // Validación: Employee solo puede crear Customer
+               
                 if (currentUserRole == "Employee" && Rol != "Customer")
                 {
                     ModelState.AddModelError("Rol", "Solo puedes crear usuarios con rol Customer");
@@ -88,7 +88,7 @@ namespace Proyecto_Gimnasio.Controllers
                     return View();
                 }
 
-                // Validación: Email único
+           
                 if (await _context.Users.AnyAsync(u => u.Email == Email))
                 {
                     ModelState.AddModelError("Email", "Este email ya está registrado");
@@ -97,7 +97,7 @@ namespace Proyecto_Gimnasio.Controllers
                     return View();
                 }
 
-                // Validación: CNIT único
+       
                 if (await _context.Persons.AnyAsync(p => p.Cnit == Cnit))
                 {
                     ModelState.AddModelError("Cnit", "Este CNIT ya está registrado");
@@ -106,7 +106,7 @@ namespace Proyecto_Gimnasio.Controllers
                     return View();
                 }
 
-                // Validación: Fecha de nacimiento - Mayor de 18 años
+               
                 var age = DateTime.Now.Year - DateBirthay.Year;
                 if (DateBirthay > DateTime.Now.AddYears(-age)) age--;
 
@@ -195,7 +195,7 @@ namespace Proyecto_Gimnasio.Controllers
                 return Forbid();
             }
 
-            // Pasar el rol actual para que no se pueda cambiar
+         
             ViewBag.CurrentRol = user.Rol;
             ViewBag.IsEmployee = currentUserRole == "Employee";
 
@@ -230,7 +230,7 @@ namespace Proyecto_Gimnasio.Controllers
                     return Forbid();
                 }
 
-                // Validación: Email único (excluyendo el usuario actual)
+            
                 if (await _context.Users.AnyAsync(u => u.Email == Email && u.Id != id))
                 {
                     ModelState.AddModelError("Email", "Este email ya está registrado");
@@ -243,7 +243,7 @@ namespace Proyecto_Gimnasio.Controllers
                     return View(userWithPerson);
                 }
 
-                // Validación: CNIT único (excluyendo el usuario actual)
+        
                 if (await _context.Persons.AnyAsync(p => p.Cnit == Cnit && p.IdPerson != IdPerson))
                 {
                     ModelState.AddModelError("Cnit", "Este CNIT ya está registrado");
@@ -256,7 +256,7 @@ namespace Proyecto_Gimnasio.Controllers
                     return View(userWithPerson);
                 }
 
-                // Validación: Fecha de nacimiento - Mayor de 18 años
+              
                 var age = DateTime.Now.Year - DateBirthay.Year;
                 if (DateBirthay > DateTime.Now.AddYears(-age)) age--;
 
@@ -272,7 +272,7 @@ namespace Proyecto_Gimnasio.Controllers
                     return View(userWithPerson);
                 }
 
-                // Validación: Fecha no puede ser futura
+               
                 if (DateBirthay.Date > DateTime.Now.Date)
                 {
                     ModelState.AddModelError("DateBirthay", "La fecha de nacimiento no puede ser futura");
@@ -291,7 +291,7 @@ namespace Proyecto_Gimnasio.Controllers
                     user.Password = BCrypt.Net.BCrypt.HashPassword(Password);
                 }
                 user.primarySession = primarySession;
-                // NO SE CAMBIA EL ROL EN EDIT
+              
 
                 _context.Update(user);
 
