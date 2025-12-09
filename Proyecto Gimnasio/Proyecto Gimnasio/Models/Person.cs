@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Collections.Generic;
 
 namespace Proyecto_Gimnasio.Models
 {
@@ -37,18 +38,25 @@ namespace Proyecto_Gimnasio.Models
 		[RegularExpression("^[MF]$", ErrorMessage = "Solo se permite M o F")]
 		public char Gender { get; set; }
 
-		// Relación 1-N con ventas
 		public ICollection<Sale>? Sales { get; set; }
-		[NotMapped] // Opcional: solo si no quieres mapearlo directamente
-		public IEnumerable<Plans> Plans => Sales?
-		.SelectMany(s => s.saleDetailsPlans)
-		.Select(sd => sd.Plans);
-		//relacion con User (1–1)
-		// FK hacia User
+
+		public ICollection<SaleProduct>? SaleProducts { get; set; }
+
+		[NotMapped]
+		public IEnumerable<Plans> PlansEnrolled => Sales?
+			.SelectMany(s => s.saleDetailsPlans ?? Enumerable.Empty<SaleDetailsPlans>())
+			.Select(sd => sd.Plans)
+			.Where(p => p != null)!;
+
+		[NotMapped]
+		public IEnumerable<Product> ProductosComprados => SaleProducts?
+			.SelectMany(sp => sp.saleDetailsProducts ?? Enumerable.Empty<SaleDetailsProducts>())
+			.Select(d => d.Product)
+			.Where(p => p != null)!;
+
 		public int UserId { get; set; }
 
 		[ForeignKey("UserId")]
-		public User User { get; set; }
-		// relacion persona 1-M planes
+		public User User { get; set; } = null!; // null! para evitar warnings si usas nullable reference types
 	}
 }

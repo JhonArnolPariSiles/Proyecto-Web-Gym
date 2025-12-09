@@ -20,10 +20,10 @@ namespace Proyecto_Gimnasio.Models
 		public double TotalPrice { get; set; }
 
 		// 1-m sale 
-		public int IdSale { get; set; }
+		public int IdSaleProduct { get; set; }
 
-		[ForeignKey("IdSale")]
-		public Sale Sale { get; set; }
+		[ForeignKey("IdSaleProduct")]
+		public SaleProduct saleProduct { get; set; }
 
 		// 1-m product
 		public int IdProduct { get; set; }

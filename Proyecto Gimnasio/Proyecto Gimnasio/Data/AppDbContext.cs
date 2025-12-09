@@ -21,6 +21,8 @@ namespace Proyecto_Gimnasio.Data
 		public DbSet<SaleDetailsPlans> saleDetailsPlans { get; set; }
 		public DbSet<SaleDetailsProducts> saleDetailsProducts { get; set; }
 		public DbSet<Person> Persons { get; set; }
+		public DbSet<SaleProduct> SalesProducts { get; set; }
+	
 
 		// Sobrescribimos SaveChanges para manejar la auditoría
 		public override int SaveChanges()

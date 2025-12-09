@@ -3,10 +3,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Proyecto_Gimnasio.Models
 {
-	public class Sale:AuditData
+	public class SaleProduct
 	{
 		[Key]
-		public int IdSale { get; set; }
+		public int IdSaleProduct { get; set; }
 
 
 		[Required(ErrorMessage = "Total is required")]
@@ -26,7 +26,6 @@ namespace Proyecto_Gimnasio.Models
 		[ForeignKey("IdPerson")]
 		public Person? Person { get; set; }
 
-		public ICollection<SaleDetailsPlans>? saleDetailsPlans { get; set; }
-
+		public ICollection<SaleDetailsProducts>? saleDetailsProducts { get; set; }
 	}
 }

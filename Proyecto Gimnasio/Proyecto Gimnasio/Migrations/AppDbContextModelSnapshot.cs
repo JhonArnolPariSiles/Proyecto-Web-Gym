@@ -271,7 +271,7 @@ namespace Proyecto_Gimnasio.Migrations
                     b.Property<int>("IdProduct")
                         .HasColumnType("int");
 
-                    b.Property<int>("IdSale")
+                    b.Property<int>("IdSaleProduct")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
@@ -284,9 +284,33 @@ namespace Proyecto_Gimnasio.Migrations
 
                     b.HasIndex("IdProduct");
 
-                    b.HasIndex("IdSale");
+                    b.HasIndex("IdSaleProduct");
 
                     b.ToTable("saleDetailsProducts");
+                });
+
+            modelBuilder.Entity("Proyecto_Gimnasio.Models.SaleProduct", b =>
+                {
+                    b.Property<int>("IdSaleProduct")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("IdSaleProduct"));
+
+                    b.Property<DateTime>("DateSale")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("IdPerson")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Total")
+                        .HasColumnType("float");
+
+                    b.HasKey("IdSaleProduct");
+
+                    b.HasIndex("IdPerson");
+
+                    b.ToTable("SalesProducts");
                 });
 
             modelBuilder.Entity("Proyecto_Gimnasio.Models.User", b =>
@@ -379,15 +403,26 @@ namespace Proyecto_Gimnasio.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Proyecto_Gimnasio.Models.Sale", "Sale")
-                        .WithMany("SaleDetailsProducts")
-                        .HasForeignKey("IdSale")
+                    b.HasOne("Proyecto_Gimnasio.Models.SaleProduct", "saleProduct")
+                        .WithMany("saleDetailsProducts")
+                        .HasForeignKey("IdSaleProduct")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Product");
 
-                    b.Navigation("Sale");
+                    b.Navigation("saleProduct");
+                });
+
+            modelBuilder.Entity("Proyecto_Gimnasio.Models.SaleProduct", b =>
+                {
+                    b.HasOne("Proyecto_Gimnasio.Models.Person", "Person")
+                        .WithMany("SaleProducts")
+                        .HasForeignKey("IdPerson")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Person");
                 });
 
             modelBuilder.Entity("Proyecto_Gimnasio.Models.Category", b =>
@@ -397,6 +432,8 @@ namespace Proyecto_Gimnasio.Migrations
 
             modelBuilder.Entity("Proyecto_Gimnasio.Models.Person", b =>
                 {
+                    b.Navigation("SaleProducts");
+
                     b.Navigation("Sales");
                 });
 
@@ -412,9 +449,12 @@ namespace Proyecto_Gimnasio.Migrations
 
             modelBuilder.Entity("Proyecto_Gimnasio.Models.Sale", b =>
                 {
-                    b.Navigation("SaleDetailsProducts");
-
                     b.Navigation("saleDetailsPlans");
+                });
+
+            modelBuilder.Entity("Proyecto_Gimnasio.Models.SaleProduct", b =>
+                {
+                    b.Navigation("saleDetailsProducts");
                 });
 
             modelBuilder.Entity("Proyecto_Gimnasio.Models.User", b =>

@@ -5,246 +5,223 @@ using Proyecto_Gimnasio.Models;
 
 namespace Proyecto_Gimnasio.Controllers
 {
-    // [NUEVO] Clase auxiliar para guardar ID y Cantidad en el carrito
-    public class CartItem
-    {
-        public int ProductId { get; set; }
-        public int Quantity { get; set; }
-    }
+	public class CartItem
+	{
+		public int ProductId { get; set; }
+		public int Quantity { get; set; }
+	}
 
-    public class SaleProductController : Controller
-    {
-        private readonly AppDbContext _context;
+	public class SaleProductController : Controller
+	{
+		private readonly AppDbContext _context;
 
-        // [MODIFICADO] Ahora la lista es de tipo CartItem, no de int.
-        private static List<CartItem> CartProducts = new List<CartItem>();
+		// Carrito y persona seleccionada (estático para demo)
+		private static List<CartItem> CartProducts = new List<CartItem>();
+		private static int SelectedPersonId = 0;
 
-        // Persona seleccionada
-        private static int SelectedPersonId = 0;
+		public SaleProductController(AppDbContext context)
+		{
+			_context = context;
+		}
 
-        public SaleProductController(AppDbContext context)
-        {
-            _context = context;
-        }
+		// GET: Index - Muestra productos y personas con historial
+		[HttpGet]
+		public async Task<IActionResult> Index(string searchName = "")
+		{
+			var products = await _context.Products
+				.Include(p => p.Category)
+				.ToListAsync();
 
-        // GET: Index (Mostrar productos + buscar personas)
-        [HttpGet]
-        public async Task<IActionResult> Index(string searchName = "")
-        {
-            var products = await _context.Products
-                .Include(p => p.Category)
-                .ToListAsync();
+			var query = _context.Persons.AsQueryable();
 
-            var persons = string.IsNullOrEmpty(searchName)
-                ? await _context.Persons.ToListAsync()
-                : await _context.Persons
-                    .Where(p => (p.Name + " " + p.LasName).Contains(searchName))
-                    .ToListAsync();
+			if (!string.IsNullOrEmpty(searchName))
+			{
+				query = query.Where(p => (p.Name + " " + p.LasName).Contains(searchName));
+			}
 
-            ViewBag.Persons = persons;
-            ViewBag.SelectedPersonId = SelectedPersonId;
-            ViewBag.SearchName = searchName;
+			var persons = await query
+				.Include(p => p.SaleProducts)
+					.ThenInclude(sp => sp.saleDetailsProducts)
+						.ThenInclude(d => d.Product)
+				.ToListAsync();
 
-            return View(products);
-        }
+			ViewBag.Persons = persons;
+			ViewBag.SelectedPersonId = SelectedPersonId;
+			ViewBag.SearchName = searchName;
 
-        // POST: SelectPerson
-        [HttpPost]
-        public IActionResult SelectPerson(int personId)
-        {
-            SelectedPersonId = personId;
-            TempData["msg"] = "Persona seleccionada para la compra.";
-            return RedirectToAction("Index");
-        }
+			return View(products);
+		}
 
-        // POST: Add (Agregar producto al carrito con Cantidad)
-        [HttpPost]
-        public async Task<IActionResult> Add(int id, int quantity)
-        {
-            // 1. Validar que se haya seleccionado una persona
-            if (SelectedPersonId == 0)
-            {
-                TempData["error"] = "Debe seleccionar una persona antes de agregar productos.";
-                return RedirectToAction("Index");
-            }
+		// POST: Seleccionar persona
+		[HttpPost]
+		public IActionResult SelectPerson(int personId)
+		{
+			SelectedPersonId = personId;
+			TempData["msg"] = "Persona seleccionada para la compra.";
+			return RedirectToAction("Index");
+		}
 
-            // 2. Validar que la cantidad sea positiva
-            if (quantity < 1)
-            {
-                TempData["error"] = "La cantidad debe ser al menos 1.";
-                return RedirectToAction("Index");
-            }
+		// POST: Agregar al carrito
+		[HttpPost]
+		public async Task<IActionResult> Add(int id, int quantity)
+		{
+			if (SelectedPersonId == 0)
+			{
+				TempData["error"] = "Debe seleccionar una persona antes de agregar productos.";
+				return RedirectToAction("Index");
+			}
 
-            // 3. Verificar Stock real en la Base de Datos
-            var productDb = await _context.Products.FindAsync(id);
-            if (productDb == null) return NotFound();
+			if (quantity < 1)
+			{
+				TempData["error"] = "La cantidad debe ser al menos 1.";
+				return RedirectToAction("Index");
+			}
 
-            // Revisar si ya está en el carrito para sumar cantidades
-            var existingItem = CartProducts.FirstOrDefault(c => c.ProductId == id);
-            int cantidadActualEnCarrito = existingItem != null ? existingItem.Quantity : 0;
+			var productDb = await _context.Products.FindAsync(id);
+			if (productDb == null) return NotFound();
 
-            // [VALIDACIÓN DE STOCK]
-            if ((cantidadActualEnCarrito + quantity) > productDb.Stock)
-            {
-                TempData["error"] = $"Stock insuficiente. Tienes {cantidadActualEnCarrito} en carrito y quieres agregar {quantity}, pero solo hay {productDb.Stock} en stock.";
-                return RedirectToAction("Index");
-            }
+			var existingItem = CartProducts.FirstOrDefault(c => c.ProductId == id);
+			int cantidadActual = existingItem?.Quantity ?? 0;
 
-            // 4. Agregar o actualizar carrito
-            if (existingItem != null)
-            {
-                existingItem.Quantity += quantity;
-            }
-            else
-            {
-                CartProducts.Add(new CartItem { ProductId = id, Quantity = quantity });
-            }
+			if ((cantidadActual + quantity) > productDb.Stock)
+			{
+				TempData["error"] = $"Stock insuficiente. Solo hay {productDb.Stock} unidades disponibles.";
+				return RedirectToAction("Index");
+			}
 
-            TempData["msg"] = "Producto agregado al carrito.";
-            return RedirectToAction("Index");
-        }
+			if (existingItem != null)
+				existingItem.Quantity += quantity;
+			else
+				CartProducts.Add(new CartItem { ProductId = id, Quantity = quantity });
 
-        // GET: Cart (Mostrar carrito)
-        [HttpGet]
-        public async Task<IActionResult> Cart()
-        {
-            // Obtenemos los IDs para buscar detalles en BD
-            var ids = CartProducts.Select(c => c.ProductId).ToList();
+			TempData["msg"] = "Producto agregado al carrito.";
+			return RedirectToAction("Index");
+		}
 
-            var products = await _context.Products
-                .Where(p => ids.Contains(p.IdProduct))
-                .ToListAsync();
+		// GET: Carrito
+		[HttpGet]
+		public async Task<IActionResult> Cart()
+		{
+			var ids = CartProducts.Select(c => c.ProductId).ToList();
+			var products = await _context.Products
+				.Where(p => ids.Contains(p.IdProduct))
+				.ToListAsync();
 
-            // [IMPORTANTE] Pasamos el carrito (con cantidades) a la vista
-            ViewBag.CartItems = CartProducts;
-            ViewBag.SelectedPersonId = SelectedPersonId;
+			ViewBag.CartItems = CartProducts;
+			ViewBag.SelectedPersonId = SelectedPersonId;
+			ViewBag.Person = SelectedPersonId > 0 ? await _context.Persons.FindAsync(SelectedPersonId) : null;
 
-            return View(products);
-        }
+			return View(products);
+		}
 
-        // POST: Remove (Quitar producto)
-        [HttpPost]
-        public IActionResult Remove(int id)
-        {
-            var item = CartProducts.FirstOrDefault(c => c.ProductId == id);
-            if (item != null)
-                CartProducts.Remove(item);
+		// POST: Quitar del carrito
+		[HttpPost]
+		public IActionResult Remove(int id)
+		{
+			CartProducts.RemoveAll(c => c.ProductId == id);
+			return RedirectToAction("Cart");
+		}
 
-            return RedirectToAction("Cart");
-        }
+		// GET: Checkout
+		[HttpGet]
+		public async Task<IActionResult> Checkout()
+		{
+			if (CartProducts.Count == 0 || SelectedPersonId == 0)
+			{
+				TempData["error"] = "Carrito vacío o persona no seleccionada.";
+				return RedirectToAction("Index");
+			}
 
-        // GET: Checkout (Resumen antes de pagar)
-        [HttpGet]
-        public async Task<IActionResult> Checkout()
-        {
-            if (CartProducts.Count == 0 || SelectedPersonId == 0)
-            {
-                TempData["error"] = "Carrito vacío o persona no seleccionada.";
-                return RedirectToAction("Index");
-            }
+			var ids = CartProducts.Select(c => c.ProductId).ToList();
+			var products = await _context.Products
+				.Where(p => ids.Contains(p.IdProduct))
+				.ToListAsync();
 
-            var ids = CartProducts.Select(c => c.ProductId).ToList();
-            var products = await _context.Products
-                .Where(p => ids.Contains(p.IdProduct))
-                .ToListAsync();
+			ViewBag.Person = await _context.Persons.FindAsync(SelectedPersonId);
+			ViewBag.CartItems = CartProducts;
 
-            ViewBag.Person = await _context.Persons.FindAsync(SelectedPersonId);
-            ViewBag.CartItems = CartProducts; // Para mostrar totales
+			return View(products);
+		}
 
-            return View(products);
-        }
+		// POST: Confirmar compra - AQUÍ ESTABA EL ERROR
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> CheckoutConfirm()
+		{
+			if (CartProducts.Count == 0 || SelectedPersonId == 0)
+			{
+				TempData["error"] = "No hay productos para procesar.";
+				return RedirectToAction("Index");
+			}
 
-        // POST: CheckoutConfirm (Confirmar compra y RESTAR STOCK)
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CheckoutConfirm()
-        {
-            if (CartProducts.Count == 0 || SelectedPersonId == 0)
-            {
-                TempData["error"] = "No hay productos para procesar.";
-                return RedirectToAction("Index");
-            }
+			var ids = CartProducts.Select(c => c.ProductId).ToList();
+			var productsDb = await _context.Products.Where(p => ids.Contains(p.IdProduct)).ToListAsync();
 
-            // 1. Traer productos de la BD
-            var ids = CartProducts.Select(c => c.ProductId).ToList();
-            var productsDb = await _context.Products
-                .Where(p => ids.Contains(p.IdProduct))
-                .ToListAsync();
+			double totalVenta = 0;
+			foreach (var item in CartProducts)
+			{
+				var p = productsDb.FirstOrDefault(x => x.IdProduct == item.ProductId);
+				if (p == null || p.Stock < item.Quantity)
+				{
+					TempData["error"] = $"Stock insuficiente para {p?.NameProduct ?? "el producto"}.";
+					return RedirectToAction("Cart");
+				}
+				totalVenta += p.Price * item.Quantity;
+			}
 
-            // 2. Calcular total y validar stock final
-            double totalVenta = 0;
-            foreach (var item in CartProducts)
-            {
-                var p = productsDb.FirstOrDefault(x => x.IdProduct == item.ProductId);
-                if (p != null)
-                {
-                    // Seguridad extra: Verificar stock de nuevo
-                    if (p.Stock < item.Quantity)
-                    {
-                        TempData["error"] = $"Stock insuficiente para {p.NameProduct} al procesar.";
-                        return RedirectToAction("Cart");
-                    }
-                    totalVenta += p.Price * item.Quantity;
-                }
-            }
+			// CREAR LA VENTA DE PRODUCTOS
+			var saleProduct = new SaleProduct
+			{
+				IdPerson = SelectedPersonId,
+				Total = totalVenta,
+				DateSale = DateTime.Now
+			};
 
-            // 3. Crear Venta
-            var sale = new Sale
-            {
-                IdPerson = SelectedPersonId,
-                Total = totalVenta,
-                DateSale = DateTime.Now,
-                UserId = 1, // ID del usuario logueado (ajustar si tienes autenticación)
-                RegisterDate = DateTime.Now,
-                Status = true
-            };
+			_context.SalesProducts.Add(saleProduct);
 
-            _context.Sales.Add(sale);
-            await _context.SaveChangesAsync();
+			// ESTO ERA LO QUE FALTABA: Guardar para generar el ID
+			await _context.SaveChangesAsync();
 
-            // 4. Crear Detalles y RESTAR STOCK
-            foreach (var item in CartProducts)
-            {
-                var p = productsDb.FirstOrDefault(x => x.IdProduct == item.ProductId);
-                if (p != null)
-                {
-                    // A. Guardar Detalle
-                    var detail = new SaleDetailsProducts
-                    {
-                        IdSale = sale.IdSale,
-                        IdProduct = p.IdProduct,
-                        Quantity = item.Quantity,
-                        TotalPrice = p.Price * item.Quantity
-                    };
-                    _context.saleDetailsProducts.Add(detail);
+			// AHORA SÍ podemos usar el ID generado
+			foreach (var item in CartProducts)
+			{
+				var p = productsDb.First(x => x.IdProduct == item.ProductId);
 
-                    // B. [CAMBIO CLAVE] Restar Stock en la BD
-                    p.Stock = p.Stock - item.Quantity;
-                    _context.Update(p);
-                }
-            }
+				var detail = new SaleDetailsProducts
+				{
+					IdSaleProduct = saleProduct.IdSaleProduct,  // ID válido
+					IdProduct = p.IdProduct,
+					Quantity = item.Quantity,
+					TotalPrice = p.Price * item.Quantity
+				};
 
-            await _context.SaveChangesAsync();
+				_context.saleDetailsProducts.Add(detail);
+				p.Stock -= item.Quantity; // Restar stock
+			}
 
-            // 5. Limpiar
-            CartProducts.Clear();
-            SelectedPersonId = 0;
+			await _context.SaveChangesAsync();
 
-            TempData["ok"] = "Compra realizada exitosamente y stock actualizado.";
-            return RedirectToAction("Index");
-        }
+			// Limpiar
+			CartProducts.Clear();
+			SelectedPersonId = 0;
+			TempData["ok"] = "¡Compra realizada exitosamente y stock actualizado!";
 
-        // GET: PersonsIndex (Historial)
-        [HttpGet]
-        public async Task<IActionResult> PersonsIndex()
-        {
-            var persons = await _context.Persons
-                .Include(p => p.Sales)
-                    .ThenInclude(s => s.SaleDetailsProducts)
-                        .ThenInclude(sd => sd.Product)
-                .ToListAsync();
+			return RedirectToAction("Index");
+		}
 
-            return View(persons);
-        }
-    }
+		// GET: PersonsIndex - Historial completo
+		[HttpGet]
+		public async Task<IActionResult> PersonsIndex()
+		{
+			var persons = await _context.Persons
+				.Include(p => p.SaleProducts)
+					.ThenInclude(sp => sp.saleDetailsProducts)
+						.ThenInclude(d => d.Product)
+				.OrderBy(p => p.LasName)
+				.ThenBy(p => p.Name)
+				.ToListAsync();
+
+			return View(persons);
+		}
+	}
 }

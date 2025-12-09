@@ -1,43 +1,41 @@
-﻿@model IEnumerable<Proyecto_Gimnasio.Models.Sale>
+﻿@model IEnumerable<Proyecto_Gimnasio.Models.SaleProduct>
 
 <h2>Mis Compras</h2>
+<a asp-action="Index" class="btn btn-primary mb-3">Seguir comprando</a>
 
 @if (!Model.Any())
 {
-    <div class="alert alert-warning">
-        No has realizado ninguna compra todavía.
-    </div>
+    <div class="alert alert-info">Aún no has realizado ninguna compra.</div>
 }
 else
 {
-    @foreach (var sale in Model)
+    @foreach (var venta in Model)
     {
-        <div class="card mb-4">
-            <div class="card-header">
-                <strong>Compra realizada:</strong> @sale.DateSale.ToString("g")
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-success text-white">
+                <strong>Compra #@venta.IdSaleProduct</strong> - @venta.DateSale.ToString("dd/MM/yyyy HH:mm")
             </div>
             <div class="card-body">
-                <p><strong>Comprador:</strong> @sale.Person?.Name ?? "Desconocido" (@sale.Person?.LasName ?? "")</p>
-
-                <table class="table table-bordered">
+                <table class="table table-sm">
                     <thead>
                         <tr>
                             <th>Producto</th>
+                            <th>Cantidad</th>
                             <th>Precio</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in sale.SaleDetailsProducts)
+                        @foreach (var d in venta.saleDetailsProducts)
                         {
                             <tr>
-                                <td>@item.Product?.NameProduct ?? "Producto no disponible"</td>
-                                <td>@item.TotalPrice.ToString("C")</td>
+                                <td>@d.Product.NameProduct</td>
+                                <td>@d.Quantity</td>
+                                <td>@d.TotalPrice.ToString("C")</td>
                             </tr>
                         }
                     </tbody>
                 </table>
-
-                <h5 class="text-end">Total: @sale.Total.ToString("C")</h5>
+                <h4 class="text-end text-success">Total: @venta.Total.ToString("C")</h4>
             </div>
         </div>
     }

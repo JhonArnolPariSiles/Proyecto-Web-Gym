@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Proyecto_Gimnasio.Migrations
 {
     /// <inheritdoc />
-    public partial class Migracion : Migration
+    public partial class AddnewModel : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -147,6 +147,27 @@ namespace Proyecto_Gimnasio.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "SalesProducts",
+                columns: table => new
+                {
+                    IdSaleProduct = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Total = table.Column<double>(type: "float", nullable: false),
+                    DateSale = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IdPerson = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SalesProducts", x => x.IdSaleProduct);
+                    table.ForeignKey(
+                        name: "FK_SalesProducts_Persons_IdPerson",
+                        column: x => x.IdPerson,
+                        principalTable: "Persons",
+                        principalColumn: "IdPerson",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "saleDetailsPlans",
                 columns: table => new
                 {
@@ -182,7 +203,7 @@ namespace Proyecto_Gimnasio.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     TotalPrice = table.Column<double>(type: "float", nullable: false),
-                    IdSale = table.Column<int>(type: "int", nullable: false),
+                    IdSaleProduct = table.Column<int>(type: "int", nullable: false),
                     IdProduct = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -195,10 +216,10 @@ namespace Proyecto_Gimnasio.Migrations
                         principalColumn: "IdProduct",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_saleDetailsProducts_Sales_IdSale",
-                        column: x => x.IdSale,
-                        principalTable: "Sales",
-                        principalColumn: "IdSale",
+                        name: "FK_saleDetailsProducts_SalesProducts_IdSaleProduct",
+                        column: x => x.IdSaleProduct,
+                        principalTable: "SalesProducts",
+                        principalColumn: "IdSaleProduct",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -229,13 +250,18 @@ namespace Proyecto_Gimnasio.Migrations
                 column: "IdProduct");
 
             migrationBuilder.CreateIndex(
-                name: "IX_saleDetailsProducts_IdSale",
+                name: "IX_saleDetailsProducts_IdSaleProduct",
                 table: "saleDetailsProducts",
-                column: "IdSale");
+                column: "IdSaleProduct");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Sales_IdPerson",
                 table: "Sales",
+                column: "IdPerson");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SalesProducts_IdPerson",
+                table: "SalesProducts",
                 column: "IdPerson");
         }
 
@@ -252,10 +278,13 @@ namespace Proyecto_Gimnasio.Migrations
                 name: "Planss");
 
             migrationBuilder.DropTable(
+                name: "Sales");
+
+            migrationBuilder.DropTable(
                 name: "Products");
 
             migrationBuilder.DropTable(
-                name: "Sales");
+                name: "SalesProducts");
 
             migrationBuilder.DropTable(
                 name: "Categories");
