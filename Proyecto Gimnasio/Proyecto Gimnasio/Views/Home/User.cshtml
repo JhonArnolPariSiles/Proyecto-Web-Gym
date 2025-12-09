@@ -1,0 +1,56 @@
+﻿@{
+    ViewData["Title"] = "Mi Perfil - IronGym";
+    Layout = null; /* Usamos null para que tome tus estilos propios */
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+
+    <link rel="stylesheet" href="/css/Register.css" />
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">IRON<span class="text-amarillo">GYM</span></div>
+
+        <div class="nav-links">
+            <a asp-controller="Plans" asp-action="Index">Planes</a>
+
+            <a asp-controller="Products" asp-action="Index">Productos</a>
+        </div>
+
+        <div>
+            <span class="text-azul" style="margin-right: 10px;">Hola, Cliente</span>
+            <a asp-controller="Acceso" asp-action="Logout" style="color: #ff4d4d; font-weight: bold;">Salir</a>
+        </div>
+    </nav>
+
+    <section class="hero" style="height: 90vh;">
+        <h1>BIENVENIDO AL <span class="text-amarillo">SIGUIENTE NIVEL</span></h1>
+        <p>Selecciona qué deseas hacer hoy.</p>
+
+        <div class="grid-3" style="margin-top: 30px;">
+
+            <div class="card">
+                <span style="font-size: 3rem;">📋</span>
+                <h3>Ver Planes</h3>
+                <p>Gestiona tu suscripción actual.</p>
+                <a asp-controller="Plans" asp-action="Index" class="btn-cta">Ir a Planes</a>
+            </div>
+
+            <div class="card">
+                <span style="font-size: 3rem;">🥤</span>
+                <h3>Tienda</h3>
+                <p>Suplementos y equipamiento.</p>
+                <a asp-controller="Products" asp-action="Index" class="btn-cta">Ir a Productos</a>
+            </div>
+
+        </div>
+    </section>
+
+</body>
+</html>
