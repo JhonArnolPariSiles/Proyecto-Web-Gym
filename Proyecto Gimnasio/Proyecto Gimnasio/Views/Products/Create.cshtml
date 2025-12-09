@@ -5,25 +5,28 @@
 }
 
 <h1>Create</h1>
-
+<link rel="stylesheet" href="~/css/Producto.css" />
 <h4>Product</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="NameProduct" class="control-label"></label>
-                <input asp-for="NameProduct" class="form-control" />
-                <span asp-validation-for="NameProduct" class="text-danger"></span>
+            <div class="form-row">
+                <div class="form-group">
+                    <label asp-for="NameProduct" class="control-label"></label>
+                    <input asp-for="NameProduct" class="form-control" />
+                    <span asp-validation-for="NameProduct" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="ImageFile" class="control-label"></label>
+                    <input asp-for="ImageFile" type="file" class="form-control"
+                           onchange="previewImage(this,'imgPreviewCreate')" />
+                    <span asp-validation-for="ImageFile" class="text-danger"></span>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label asp-for="ImageFile" class="control-label"></label>
-                <input asp-for="ImageFile" type="file" class="form-control"
-                       onchange="previewImage(this,'imgPreviewCreate')" />
-                <span asp-validation-for="ImageFile" class="text-danger"></span>
-            </div>
 
 
             <div class="form-group">
@@ -31,26 +34,32 @@
             </div>
 
             <input asp-for="Image" type="hidden" />
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label asp-for="Stock" class="control-label"></label>
+                    <input asp-for="Stock" class="form-control" />
+                    <span asp-validation-for="Stock" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Price" class="control-label"></label>
+                    <input asp-for="Price" class="form-control" />
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
+            </div>
 
-            <div class="form-group">
-                <label asp-for="Stock" class="control-label"></label>
-                <input asp-for="Stock" class="form-control" />
-                <span asp-validation-for="Stock" class="text-danger"></span>
+            <div class="form-row">
+                <div class="form-group">
+                    <label asp-for="ExpirationDate" class="control-label"></label>
+                    <input asp-for="ExpirationDate" class="form-control" />
+                    <span asp-validation-for="ExpirationDate" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="IdCategory" class="control-label"></label>
+                    <select asp-for="IdCategory" class="form-control" asp-items="ViewBag.IdCategory"></select>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ExpirationDate" class="control-label"></label>
-                <input asp-for="ExpirationDate" class="form-control" />
-                <span asp-validation-for="ExpirationDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="IdCategory" class="control-label"></label>
-                <select asp-for="IdCategory" class="form-control" asp-items="ViewBag.IdCategory"></select>
-            </div>
+
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

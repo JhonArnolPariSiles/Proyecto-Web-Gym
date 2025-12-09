@@ -22,6 +22,7 @@ namespace Proyecto_Gimnasio.Models
         public string? Image { get; set; }
 
         [NotMapped]
+        [Required(ErrorMessage = "Debe seleccionar una imagen")]
         [Display(Name = "Image File")]
         public IFormFile? ImageFile { get; set; }
 
@@ -40,14 +41,10 @@ namespace Proyecto_Gimnasio.Models
         [Display(Name = "EXPIRATION DATE")]
         [DataType(DataType.Date)]
         public DateTime ExpirationDate { get; set; }
-
         public int IdCategory { get; set; }
-
 
 		[ForeignKey("IdCategory")]
 		public Category? Category { get; set; }
-		//relacion Product 1–N SaleDetailsProducts
-
 		public ICollection<SaleDetailsProducts>? SaleDetailsProducts { get; set; }
 
 	}
