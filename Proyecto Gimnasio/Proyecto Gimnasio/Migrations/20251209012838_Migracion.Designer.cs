@@ -12,8 +12,8 @@ using Proyecto_Gimnasio.Data;
 namespace Proyecto_Gimnasio.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251128135739_database")]
-    partial class database
+    [Migration("20251209012838_Migracion")]
+    partial class Migracion
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -165,7 +165,6 @@ namespace Proyecto_Gimnasio.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Image")
-                        .IsRequired()
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
