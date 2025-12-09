@@ -6,25 +6,24 @@
 
 <h1>Detalles del Producto</h1>
 
-<div>
+<div class="card-container">
     <h4>Producto</h4>
     <hr />
     <dl class="row">
-        <dt class="col-sm-2">
+        <dt class="col-sm-4">
             @Html.DisplayNameFor(model => model.NameProduct)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-8">
             @Html.DisplayFor(model => model.NameProduct)
         </dd>
 
-        <dt class="col-sm-2">
+        <dt class="col-sm-4">
             @Html.DisplayNameFor(model => model.Image)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-8">
             @if (!string.IsNullOrEmpty(Model.Image))
             {
-                <img src="~/@Model.Image" alt="Imagen del producto"
-                     width="200" style="border-radius:8px;" />
+                <img src="~/@Model.Image" alt="Imagen del producto" class="product-image" />
             }
             else
             {
@@ -32,37 +31,37 @@
             }
         </dd>
 
-        <dt class="col-sm-2">
+        <dt class="col-sm-4">
             @Html.DisplayNameFor(model => model.Stock)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-8">
             @Html.DisplayFor(model => model.Stock)
         </dd>
 
-        <dt class="col-sm-2">
+        <dt class="col-sm-4">
             @Html.DisplayNameFor(model => model.Price)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-8">
             @Html.DisplayFor(model => model.Price)
         </dd>
 
-        <dt class="col-sm-2">
+        <dt class="col-sm-4">
             @Html.DisplayNameFor(model => model.ExpirationDate)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-8">
             @Html.DisplayFor(model => model.ExpirationDate)
         </dd>
 
-        <dt class="col-sm-2">
+        <dt class="col-sm-4">
             @Html.DisplayNameFor(model => model.Category)
         </dt>
-        <dd class="col-sm-10">
+        <dd class="col-sm-8">
             @Html.DisplayFor(model => model.Category.NameCategory)
         </dd>
     </dl>
-</div>
 
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.IdProduct" class="btn btn-warning">Editar</a> |
-    <a asp-action="Index" class="btn btn-secondary">Volver</a>
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model.IdProduct" class="btn btn-warning">Editar</a>
+        <a asp-action="Index" class="btn btn-secondary">Volver</a>
+    </div>
 </div>

@@ -14,58 +14,62 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="IdProduct" />
 
-            <div class="form-group">
-                <label asp-for="NameProduct" class="control-label"></label>
-                <input asp-for="NameProduct" class="form-control" />
-                <span asp-validation-for="NameProduct" class="text-danger"></span>
+            <div class="form-row">
+                <div class="form-group">
+                    <label asp-for="NameProduct" class="control-label"></label>
+                    <input asp-for="NameProduct" class="form-control" />
+                    <span asp-validation-for="NameProduct" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="ImageFile" class="control-label"></label>
+                    <input asp-for="ImageFile" type="file" class="form-control"
+                           onchange="previewImage(this,'imgPreviewEdit')" />
+                    <span asp-validation-for="ImageFile" class="text-danger"></span>
+                </div>
             </div>
 
-
             <div class="form-group">
-                <label asp-for="Image" class="control-label"></label>
+                <label>Current Image</label>
                 <br />
                 @if (!string.IsNullOrEmpty(Model.Image))
                 {
-                    <img src="~/@Model.Image" style="max-width:150px;max-height:150px;" />
+                    <img src="~/@Model.Image" style="max-width:150px;max-height:150px;border-radius:5px;" />
                 }
             </div>
 
-
-            <div class="form-group">
-                <label asp-for="ImageFile" class="control-label"></label>
-                <input asp-for="ImageFile" type="file" class="form-control"
-                       onchange="previewImage(this,'imgPreviewEdit')" />
-                <span asp-validation-for="ImageFile" class="text-danger"></span>
-            </div>
-
- 
             <div class="form-group">
                 <img id="imgPreviewEdit" style="max-width:150px;max-height:150px;display:none;" />
             </div>
 
-
             <input asp-for="Image" type="hidden" />
 
-            <div class="form-group">
-                <label asp-for="Stock" class="control-label"></label>
-                <input asp-for="Stock" class="form-control" />
-                <span asp-validation-for="Stock" class="text-danger"></span>
+            <div class="form-row">
+                <div class="form-group">
+                    <label asp-for="Stock" class="control-label"></label>
+                    <input asp-for="Stock" class="form-control" />
+                    <span asp-validation-for="Stock" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Price" class="control-label"></label>
+                    <input asp-for="Price" class="form-control" />
+                    <span asp-validation-for="Price" class="text-danger"></span>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label asp-for="ExpirationDate" class="control-label"></label>
+                    <input asp-for="ExpirationDate" class="form-control" />
+                    <span asp-validation-for="ExpirationDate" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="IdCategory" class="control-label"></label>
+                    <select asp-for="IdCategory" class="form-control" asp-items="ViewBag.IdCategory"></select>
+                    <span asp-validation-for="IdCategory" class="text-danger"></span>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="ExpirationDate" class="control-label"></label>
-                <input asp-for="ExpirationDate" class="form-control" />
-                <span asp-validation-for="ExpirationDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="IdCategory" class="control-label"></label>
-                <select asp-for="IdCategory" class="form-control" asp-items="ViewBag.IdCategory"></select>
-                <span asp-validation-for="IdCategory" class="text-danger"></span>
-            </div>
+
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>

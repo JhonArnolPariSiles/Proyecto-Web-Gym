@@ -14,7 +14,7 @@ body {
     font-family: Arial, sans-serif;
 }
 
-h1, h4 {
+h1, h4, h3 {
     color: var(--amarillo-neon);
 }
 
@@ -58,6 +58,7 @@ hr {
         box-shadow: 0 0 5px var(--azul-electrico);
     }
 
+
 .btn-primary {
     background-color: var(--azul-electrico);
     color: var(--blanco);
@@ -71,6 +72,64 @@ hr {
         background-color: var(--azul-oscuro);
     }
 
+.btn-danger {
+    background-color: #dc3545;
+    color: var(--blanco);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+    .btn-danger:hover {
+        background-color: #c82333;
+    }
+
+.btn-warning {
+    background-color: var(--amarillo-neon);
+    color: var(--negro-base);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+    .btn-warning:hover {
+        background-color: #e6c200;
+    }
+
+.btn-secondary {
+    background-color: var(--gris);
+    color: var(--negro-base);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+    .btn-secondary:hover {
+        background-color: #888;
+    }
+
+.btn-info {
+    background-color: #17a2b8;
+    color: var(--blanco);
+    border: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+    .btn-info:hover {
+        background-color: #138496;
+    }
+
+.btn-sm {
+    padding: 5px 10px;
+    font-size: 14px;
+}
+
+
 a {
     color: var(--amarillo-neon);
     text-decoration: none;
@@ -80,12 +139,72 @@ a {
         color: var(--azul-electrico);
     }
 
+
 .text-danger {
-    color: #ff4444;
+    color: yellow;
 }
 
-#imgPreviewCreate {
+
+#imgPreviewCreate, #imgPreviewEdit {
     border: 2px solid var(--azul-electrico);
     border-radius: 5px;
     margin-top: 10px;
+}
+
+.product-image {
+    max-width: 200px;
+    max-height: 200px;
+    border-radius: 8px;
+    border: 2px solid var(--azul-electrico);
+}
+
+.table-image {
+    width: 100px;
+    border-radius: 5px;
+}
+
+
+.card-container {
+    background-color: var(--negro-claro);
+    padding: 30px;
+    border-radius: 10px;
+    max-width: 800px;
+    margin: 20px auto;
+    border: 2px solid var(--azul-oscuro);
+}
+
+
+.table {
+    background-color: var(--negro-claro);
+    color: var(--blanco);
+    border-radius: 5px;
+}
+
+    .table thead {
+        background-color: var(--azul-oscuro);
+        color: var(--blanco);
+    }
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: var(--negro-claro);
+}
+
+.table-striped tbody tr:nth-of-type(even) {
+    background-color: var(--negro-base);
+}
+
+.table td, .table th {
+    border-color: var(--azul-oscuro);
+    padding: 12px;
+}
+
+
+dl.row dt {
+    color: var(--amarillo-neon);
+    font-weight: bold;
+}
+
+dl.row dd {
+    color: var(--blanco);
+    margin-bottom: 15px;
 }

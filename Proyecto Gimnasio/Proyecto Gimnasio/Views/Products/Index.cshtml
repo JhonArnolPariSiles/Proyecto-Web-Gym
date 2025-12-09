@@ -22,7 +22,7 @@
             <th>@Html.DisplayNameFor(model => model.Price)</th>
             <th>@Html.DisplayNameFor(model => model.ExpirationDate)</th>
             <th>@Html.DisplayNameFor(model => model.Category)</th>
-            <th></th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -34,8 +34,7 @@
                 <td>
                     @if (!string.IsNullOrEmpty(item.Image))
                     {
-                        <img src="~/@item.Image" alt="Imagen del producto"
-                             width="100" style="border-radius:5px;" />
+                        <img src="~/@item.Image" alt="Imagen del producto" class="table-image" />
                     }
                     else
                     {
@@ -49,7 +48,6 @@
                 <td>@Html.DisplayFor(modelItem => item.Category.NameCategory)</td>
 
                 <td>
-
                     @if (User.IsInRole("Admin"))
                     {
                         <a class="btn btn-warning btn-sm" asp-action="Edit" asp-route-id="@item.IdProduct">Editar</a>
@@ -64,7 +62,6 @@
                     {
                         <a class="btn btn-danger btn-sm" asp-action="Delete" asp-route-id="@item.IdProduct">Eliminar</a>
                     }
-
                 </td>
             </tr>
         }
