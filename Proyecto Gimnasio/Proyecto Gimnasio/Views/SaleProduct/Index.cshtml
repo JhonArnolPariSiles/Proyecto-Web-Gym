@@ -60,12 +60,12 @@
                             <small class="text-muted">CNIT: @person.Cnit</small>
                         </td>
                         <td>
-                            @if (person.Sales != null && person.Sales.Any())
+                            @if (person.SaleProducts != null && person.SaleProducts.Any())
                             {
                                 <ul style="font-size: 0.9em;">
-                                    @foreach (var sale in person.Sales)
+                                    @foreach (var sale in person.SaleProducts)
                                     {
-                                        @foreach (var sd in sale.SaleDetailsProducts)
+                                        @foreach (var sd in sale.saleDetailsProducts)
                                         {
                                             <li>@sd.Product.NameProduct - (@sd.Quantity un.) - @sd.TotalPrice.ToString("C")</li>
                                         }

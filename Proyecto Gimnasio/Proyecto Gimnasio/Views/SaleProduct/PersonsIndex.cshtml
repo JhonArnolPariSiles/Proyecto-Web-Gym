@@ -19,12 +19,12 @@
             <tr>
                 <td>@person.Name @person.LasName</td>
                 <td>
-                    @if (person.Sales != null && person.Sales.Any())
+                    @if (person.SaleProducts != null && person.SaleProducts.Any())
                     {
                         <ul>
-                            @foreach (var sale in person.Sales)
+                            @foreach (var sale in person.SaleProducts)
                             {
-                                @foreach (var detail in sale.SaleDetailsProducts)
+                                @foreach (var detail in sale.saleDetailsProducts)
                                 {
                                     <li>
                                         @detail.Product.NameProduct -

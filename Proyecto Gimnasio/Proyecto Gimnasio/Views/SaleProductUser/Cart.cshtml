@@ -1,40 +1,64 @@
-﻿@model IEnumerable<Proyecto_Gimnasio.Models.Product>
-
-<h2>Carrito</h2>
-
-@if (!Model.Any())
-{
-    <div class="alert alert-warning">El carrito está vacío</div>
-    <a asp-action="Index" class="btn btn-primary">Ver productos</a>
-    return;
+﻿@using Proyecto_Gimnasio.Controllers
+@model IEnumerable<Proyecto_Gimnasio.Models.Product>
+@{
+    var cartItems = ViewBag.CartItems as List<SaleProductUserController.CartItem>;
 }
 
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Producto</th>
-            <th>Precio</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var p in Model)
-        {
+<h2 class="mb-4">Carrito de Compras</h2>
+
+@if (cartItems == null || !cartItems.Any())
+{
+    <div class="alert alert-warning">El carrito está vacío</div>
+    <a asp-action="Index" class="btn btn-primary">Volver a productos</a>
+}
+else
+{
+    <table class="table table-bordered table-hover align-middle">
+        <thead class="table-dark">
             <tr>
-                <td>@p.NameProduct</td>
-                <td>@p.Price.ToString("C")</td>
-                <td>
-                    <form asp-action="Remove" method="post">
-                        <input type="hidden" name="id" value="@p.IdProduct" />
-                        <button class="btn btn-danger btn-sm">Quitar</button>
-                    </form>
-                </td>
+                <th>Producto</th>
+                <th>Precio Unitario</th>
+                <th>Cantidad</th>
+                <th>Subtotal</th>
+                <th></th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in cartItems)
+            {
+                var p = Model.FirstOrDefault(x => x.IdProduct == item.ProductId);
+                if (p != null)
+                {
+                    <tr>
+                        <td><strong>@p.NameProduct</strong></td>
+                        <td>Bs @p.Price:N2</td>
+                        <td class="text-center fw-bold fs-5">@item.Quantity</td>
+                        <td class="text-end fw-bold">Bs @(p.Price* item.Quantity)</td>
+                        <td>
+                            <form asp-action="Remove" method="post" class="d-inline">
+                                <input type="hidden" name="id" value="@p.IdProduct" />
+                                <button type="submit" class="btn btn-danger btn-sm">
+                                    Quitar
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+        <tfoot>
+            <tr class="table-success">
+                <td colspan="3" class="text-end fw-bold fs-3">TOTAL A PAGAR:</td>
+                <td class="text-end fw-bold fs-3">
+                    Bs @cartItems.Sum(i => Model.First(p => p.IdProduct == i.ProductId).Price * i.Quantity)
+                </td>
+                <td></td>
+            </tr>
+        </tfoot>
+    </table>
 
-<h3 class="text-end">Total: @Model.Sum(x => x.Price).ToString("C")</h3>
-
-<a asp-action="Index" class="btn btn-secondary">Seguir Comprando</a>
-<a asp-action="Checkout" class="btn btn-success">Procesar Compra</a>
+    <div class="text-end mt-4">
+        <a asp-action="Index" class="btn btn-secondary btn-lg">Seguir Comprando</a>
+        <a asp-action="Checkout" class="btn btn-success btn-lg ms-3">Procesar Compra</a>
+    </div>
+}
