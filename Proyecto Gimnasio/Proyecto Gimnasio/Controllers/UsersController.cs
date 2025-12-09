@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Proyecto_Gimnasio.Controllers
 {
-    [Authorize] 
+    [Authorize]
     public class UsersController : Controller
     {
         private readonly AppDbContext _context;
@@ -22,7 +22,7 @@ namespace Proyecto_Gimnasio.Controllers
         }
 
         // GET: Users
-        [Authorize(Roles = "Admin,Employee")] 
+        [Authorize(Roles = "Admin,Employee")]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Users.Include(u => u.Person).ToListAsync());
@@ -52,16 +52,14 @@ namespace Proyecto_Gimnasio.Controllers
         [Authorize(Roles = "Admin,Employee")]
         public IActionResult Create()
         {
-            
             var currentUserRole = User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Role)?.Value;
 
-          
             if (currentUserRole == "Employee")
             {
                 ViewBag.Roles = new SelectList(new[] { "Customer" });
                 ViewBag.IsEmployee = true;
             }
-            else 
+            else
             {
                 ViewBag.Roles = new SelectList(new[] { "Admin", "Employee", "Customer" });
                 ViewBag.IsEmployee = false;
@@ -79,25 +77,36 @@ namespace Proyecto_Gimnasio.Controllers
             string Name, string LasName, string SecondLastName,
             DateTime DateBirthay, int Cnit, char Gender)
         {
+           
+            if (DateBirthay.Date > DateTime.Today)
+            {
+                ModelState.AddModelError("DateBirthay", "Birth date cannot be in the future");
+            }
+
+            var age = DateTime.Today.Year - DateBirthay.Year;
+            if (DateBirthay.Date > DateTime.Today.AddYears(-age)) age--;
+
+            if (age < 18)
+            {
+                ModelState.AddModelError("DateBirthay", "User must be at least 18 years old");
+            }
+
             try
             {
-                
                 var currentUserRole = User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Role)?.Value;
 
                 if (currentUserRole == "Employee" && Rol != "Customer")
                 {
                     ModelState.AddModelError("Rol", "Solo puedes crear usuarios con rol Customer");
-                    ViewBag.Roles = new SelectList(new[] { "Customer" });
-                    ViewBag.IsEmployee = true;
-                    ViewBag.Error = "No tienes permiso para crear este tipo de usuario";
-                    return View();
                 }
 
                 if (await _context.Users.AnyAsync(u => u.Email == Email))
                 {
                     ModelState.AddModelError("Email", "Este email ya está registrado");
+                }
 
-                   
+                if (!ModelState.IsValid)
+                {
                     if (currentUserRole == "Employee")
                     {
                         ViewBag.Roles = new SelectList(new[] { "Customer" });
@@ -108,8 +117,6 @@ namespace Proyecto_Gimnasio.Controllers
                         ViewBag.Roles = new SelectList(new[] { "Admin", "Employee", "Customer" });
                         ViewBag.IsEmployee = false;
                     }
-
-                    ViewBag.Error = "Email ya existe";
                     return View();
                 }
 
@@ -184,11 +191,22 @@ namespace Proyecto_Gimnasio.Controllers
                 return NotFound();
             }
 
-            
             var currentUserRole = User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Role)?.Value;
             if (currentUserRole == "Employee" && user.Rol != "Customer")
             {
-                return Forbid(); 
+                return Forbid();
+            }
+
+     
+            if (currentUserRole == "Employee")
+            {
+                ViewBag.Roles = new SelectList(new[] { "Customer" }, user.Rol);
+                ViewBag.IsEmployee = true;
+            }
+            else
+            {
+                ViewBag.Roles = new SelectList(new[] { "Admin", "Employee", "Customer" }, user.Rol);
+                ViewBag.IsEmployee = false;
             }
 
             return View(user);
@@ -208,38 +226,82 @@ namespace Proyecto_Gimnasio.Controllers
                 return NotFound();
             }
 
+         
+            if (DateBirthay.Date > DateTime.Today)
+            {
+                ModelState.AddModelError("DateBirthay", "Birth date cannot be in the future");
+            }
+
+           
+            var age = DateTime.Today.Year - DateBirthay.Year;
+            if (DateBirthay.Date > DateTime.Today.AddYears(-age)) age--;
+
+            if (age < 18)
+            {
+                ModelState.AddModelError("DateBirthay", "User must be at least 18 years old");
+            }
+
             try
             {
-                var user = await _context.Users.FindAsync(id);
-                if (user == null)
+             
+                var existingUser = await _context.Users
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(u => u.Id == id);
+
+                if (existingUser == null)
                 {
                     return NotFound();
                 }
 
-                
                 var currentUserRole = User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Role)?.Value;
-                if (currentUserRole == "Employee" && user.Rol != "Customer")
+                if (currentUserRole == "Employee" && existingUser.Rol != "Customer")
                 {
                     return Forbid();
                 }
 
-                
                 if (currentUserRole == "Employee" && Rol != "Customer")
                 {
-                    ViewBag.Error = "No tienes permiso para cambiar el rol";
+                    ModelState.AddModelError("Rol", "No tienes permiso para cambiar el rol");
+                }
+
+                // Validar email duplicado (excepto el actual)
+                var emailExists = await _context.Users
+                    .AnyAsync(u => u.Email == Email && u.Id != id);
+                if (emailExists)
+                {
+                    ModelState.AddModelError("Email", "Este email ya está registrado");
+                }
+
+                if (!ModelState.IsValid)
+                {
+                    if (currentUserRole == "Employee")
+                    {
+                        ViewBag.Roles = new SelectList(new[] { "Customer" }, Rol);
+                        ViewBag.IsEmployee = true;
+                    }
+                    else
+                    {
+                        ViewBag.Roles = new SelectList(new[] { "Admin", "Employee", "Customer" }, Rol);
+                        ViewBag.IsEmployee = false;
+                    }
+
                     var userWithPerson = await _context.Users
                         .Include(u => u.Person)
+                        .AsNoTracking()
                         .FirstOrDefaultAsync(u => u.Id == id);
                     return View(userWithPerson);
                 }
 
-                user.Email = Email;
-                if (!string.IsNullOrEmpty(Password))
+                var user = new User
                 {
-                    user.Password = BCrypt.Net.BCrypt.HashPassword(Password);
-                }
-                user.primarySession = primarySession;
-                user.Rol = Rol;
+                    Id = id,
+                    Email = Email,
+                    Password = string.IsNullOrWhiteSpace(Password)
+                        ? existingUser.Password
+                        : BCrypt.Net.BCrypt.HashPassword(Password),
+                    primarySession = primarySession,
+                    Rol = Rol
+                };
 
                 _context.Update(user);
 
@@ -264,15 +326,29 @@ namespace Proyecto_Gimnasio.Controllers
             catch (Exception ex)
             {
                 ViewBag.Error = "Error: " + ex.Message;
+
+                var currentUserRole = User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Role)?.Value;
+                if (currentUserRole == "Employee")
+                {
+                    ViewBag.Roles = new SelectList(new[] { "Customer" }, Rol);
+                    ViewBag.IsEmployee = true;
+                }
+                else
+                {
+                    ViewBag.Roles = new SelectList(new[] { "Admin", "Employee", "Customer" }, Rol);
+                    ViewBag.IsEmployee = false;
+                }
+
                 var userWithPerson = await _context.Users
                     .Include(u => u.Person)
+                    .AsNoTracking()
                     .FirstOrDefaultAsync(u => u.Id == id);
                 return View(userWithPerson);
             }
         }
 
         // GET: Users/Delete/5
-        [Authorize(Roles = "Admin")] 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -294,7 +370,7 @@ namespace Proyecto_Gimnasio.Controllers
         // POST: Users/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")] 
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var user = await _context.Users
