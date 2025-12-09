@@ -1,13 +1,12 @@
 ﻿@model Proyecto_Gimnasio.Models.User
 
-
 @{
     ViewData["Title"] = "Edit";
 }
-<h1>Edit</h1>
-<h4>User</h4>
+<h1>Edit User</h1>
+<h4>User Information</h4>
 <hr />
-
+<link rel="stylesheet" href="~/css/Users.css" />
 @if (ViewBag.Error != null)
 {
     <div class="alert alert-danger">
@@ -16,65 +15,76 @@
 }
 
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-8">
         <form asp-action="Edit" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" name="UserId" value="@Model.Id" />
             
-            <div class="form-group">
-                <label for="Email" class="control-label">Email Address</label>
-                <input name="Email" id="Email" class="form-control" value="@Model.Email" required />
+            <h4>User Account</h4>
+            <hr />
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="Email" class="control-label">Email Address</label>
+                    <input name="Email" id="Email" class="form-control" value="@Model.Email" required />
+                </div>
+                <div class="form-group">
+                    <label for="Password" class="control-label">Password (leave blank to keep current)</label>
+                    <input name="Password" id="Password" class="form-control" type="password" />
+                </div>
             </div>
-            <div class="form-group">
-                <label for="Password" class="control-label">Password </label>
-                <input name="Password" id="Password" class="form-control" type="password" />
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" name="primarySession" type="checkbox" @(Model.primarySession ? "checked" : "") /> primarySession
-                </label>
-            </div>
-            <div class="form-group">
-                <label for="Rol" class="control-label">Role</label>
-                <select name="Rol" id="Gender" class="form-control" required>
-                    <option value="">-- Select Role --</option>
-                    <option value="Admin">Admin</option>
-                    <option value="Employee">Employee</option>
-                    <option value="Customer">Customer</option>
-                </select>
+
+            <div class="form-row">
+                <div class="form-group form-check">
+                    <label class="form-check-label">
+                        <input class="form-check-input" name="primarySession" type="checkbox" @(Model.primarySession ? "checked" : "") /> Primary Session
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label class="control-label">Role (cannot be changed)</label>
+                    <input type="text" class="form-control" value="@Model.Rol" readonly />
+                </div>
             </div>
             
-            <h4>Person</h4>
+            <h4>Person Information</h4>
             <hr />
             
             <input type="hidden" name="IdPerson" value="@Model.Person?.IdPerson" />
             
-            <div class="form-group">
-                <label for="Name" class="control-label">NAME</label>
-                <input name="Name" id="Name" class="form-control" value="@Model.Person?.Name" required />
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="Name" class="control-label">NAME</label>
+                    <input name="Name" id="Name" class="form-control" value="@Model.Person?.Name" required />
+                </div>
+                <div class="form-group">
+                    <label for="LasName" class="control-label">LAST NAME</label>
+                    <input name="LasName" id="LasName" class="form-control" value="@Model.Person?.LasName" required />
+                </div>
             </div>
-            <div class="form-group">
-                <label for="LasName" class="control-label">LAST NAME</label>
-                <input name="LasName" id="LasName" class="form-control" value="@Model.Person?.LasName" required />
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="SecondLastName" class="control-label">SECOND LAST NAME</label>
+                    <input name="SecondLastName" id="SecondLastName" class="form-control" value="@Model.Person?.SecondLastName" />
+                </div>
+                <div class="form-group">
+                    <label for="Cnit" class="control-label">CNIT</label>
+                    <input name="Cnit" id="Cnit" type="number" class="form-control" value="@Model.Person?.Cnit" required />
+                </div>
             </div>
-            <div class="form-group">
-                <label for="SecondLastName" class="control-label">SECOND LAST NAME</label>
-                <input name="SecondLastName" id="SecondLastName" class="form-control" value="@Model.Person?.SecondLastName" />
-            </div>
-            <div class="form-group">
-                <label for="DateBirthay" class="control-label">Date of Birth</label>
-                <input name="DateBirthay" id="DateBirthay" type="date" class="form-control" value="@Model.Person?.DateBirthay.ToString("yyyy-MM-dd")" required />
-            </div>
-            <div class="form-group">
-                <label for="Cnit" class="control-label">CNIT</label>
-                <input name="Cnit" id="Cnit" type="number" class="form-control" value="@Model.Person?.Cnit" required />
-            </div>
-            <div class="form-group">
-                <label for="Gender" class="control-label">Gender</label>
-                <select name="Gender" id="Gender" class="form-control" required>
-                    <option value="M">M</option>
-                    <option value="F">F</option>
-                </select>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="DateBirthay" class="control-label">Date of Birth</label>
+                    <input name="DateBirthay" id="DateBirthay" type="date" class="form-control" value="@Model.Person?.DateBirthay.ToString("yyyy-MM-dd")" required />
+                </div>
+                <div class="form-group">
+                    <label for="Gender" class="control-label">Gender</label>
+                    <select name="Gender" id="Gender" class="form-control" required>
+                        <option value="M">Male</option>
+                        <option value="F">Famele</option>
+                    </select>
+                </div>
             </div>
             
             <div class="form-group">
