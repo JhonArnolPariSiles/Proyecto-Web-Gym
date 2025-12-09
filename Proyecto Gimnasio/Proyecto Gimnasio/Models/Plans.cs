@@ -16,12 +16,15 @@ namespace Proyecto_Gimnasio.Models
 		[DataType(DataType.Currency)]
 		public double Price { get; set; }
 
-		[StringLength(500, MinimumLength = 20)]
-		public string? Description { get; set; }
+		[StringLength(500, MinimumLength = 5)]
+        [RegularExpression(@"^[a-zA-Z0-9]+(?:\s+[a-zA-Z0-9]+)*$", ErrorMessage = "Name must contain only letters, numbers and spaces (no leading/trailing spaces)")]
+
+        public string? Description { get; set; }
 
 		[Required(ErrorMessage = "Sart Date date is required")]
 		[Display(Name = "START DATE")]
 		[DataType(DataType.Date)]
+
 		public DateTime StartDate { get; set; }
 
 		[Required(ErrorMessage = "End Date date is required")]

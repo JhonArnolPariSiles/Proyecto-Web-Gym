@@ -60,13 +60,10 @@ namespace Proyecto_Gimnasio.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdProduct,NameProduct,Stock,Price,ExpirationDate,IdCategory")] Product product)
         {
-            // Validación de fecha
             if (product.ExpirationDate.Date < DateTime.Today)
             {
                 ModelState.AddModelError("ExpirationDate", "Expiration date cannot be before today");
             }
-
-            // Remover validación de ImageFile si no se subió archivo
             ModelState.Remove("ImageFile");
 
             try
