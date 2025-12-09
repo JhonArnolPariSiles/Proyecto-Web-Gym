@@ -58,25 +58,38 @@ namespace Proyecto_Gimnasio.Controllers
         // POST: Products/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdProduct,NameProduct,Image,ImageFile,Stock,Price,ExpirationDate,IdCategory")] Product product)
+        public async Task<IActionResult> Create([Bind("IdProduct,NameProduct,Stock,Price,ExpirationDate,IdCategory")] Product product)
         {
+            // Validación de fecha
+            if (product.ExpirationDate.Date < DateTime.Today)
+            {
+                ModelState.AddModelError("ExpirationDate", "Expiration date cannot be before today");
+            }
+
+            // Remover validación de ImageFile si no se subió archivo
+            ModelState.Remove("ImageFile");
+
             try
             {
-                if (product.ImageFile != null && product.ImageFile.Length > 0)
+                if (Request.Form.Files.Count > 0)
                 {
-                    var uploadsFolder = Path.Combine(_env.WebRootPath ?? "", "Images");
-                    if (!Directory.Exists(uploadsFolder))
-                        Directory.CreateDirectory(uploadsFolder);
-
-                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(product.ImageFile.FileName);
-                    var filePath = Path.Combine(uploadsFolder, fileName);
-
-                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    var imageFile = Request.Form.Files["ImageFile"];
+                    if (imageFile != null && imageFile.Length > 0)
                     {
-                        await product.ImageFile.CopyToAsync(stream);
-                    }
+                        var uploadsFolder = Path.Combine(_env.WebRootPath ?? "", "Images");
+                        if (!Directory.Exists(uploadsFolder))
+                            Directory.CreateDirectory(uploadsFolder);
 
-                    product.Image = Path.Combine("Images", fileName).Replace("\\", "/");
+                        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
+                        var filePath = Path.Combine(uploadsFolder, fileName);
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await imageFile.CopyToAsync(stream);
+                        }
+
+                        product.Image = Path.Combine("Images", fileName).Replace("\\", "/");
+                    }
                 }
             }
             catch (Exception ex)
@@ -95,6 +108,7 @@ namespace Proyecto_Gimnasio.Controllers
             return View(product);
         }
 
+
         // GET: Products/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -112,30 +126,66 @@ namespace Proyecto_Gimnasio.Controllers
             return View(product);
         }
 
+        
         // POST: Products/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdProduct,NameProduct,Image,ImageFile,Stock,Price,ExpirationDate,IdCategory")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("IdProduct,NameProduct,Stock,Price,ExpirationDate,IdCategory")] Product product)
         {
             if (id != product.IdProduct)
             {
                 return NotFound();
             }
-            if (product.ImageFile != null && product.ImageFile.Length > 0)
+            if (product.ExpirationDate.Date < DateTime.Today)
             {
-                var uploadsFolder = Path.Combine(_env.WebRootPath, "Images");
-                if (!Directory.Exists(uploadsFolder))
-                    Directory.CreateDirectory(uploadsFolder);
+                ModelState.AddModelError("ExpirationDate", "Expiration date cannot be before today");
+            }
 
-                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(product.ImageFile.FileName);
-                var filePath = Path.Combine(uploadsFolder, fileName);
+            ModelState.Remove("ImageFile");
+            ModelState.Remove("Image");
 
-                using (var stream = new FileStream(filePath, FileMode.Create))
+
+            var existingProduct = await _context.Products.AsNoTracking().FirstOrDefaultAsync(p => p.IdProduct == id);
+            if (existingProduct == null)
+            {
+                return NotFound();
+            }
+            product.Image = existingProduct.Image;
+            try
+            {
+                if (Request.Form.Files.Count > 0)
                 {
-                    await product.ImageFile.CopyToAsync(stream);
-                }
+                    var imageFile = Request.Form.Files["ImageFile"];
+                    if (imageFile != null && imageFile.Length > 0)
+                    {
+                        var uploadsFolder = Path.Combine(_env.WebRootPath, "Images");
+                        if (!Directory.Exists(uploadsFolder))
+                            Directory.CreateDirectory(uploadsFolder);
 
-                product.Image = Path.Combine("Images", fileName).Replace("\\", "/");
+                        if (!string.IsNullOrEmpty(existingProduct.Image))
+                        {
+                            var oldImagePath = Path.Combine(_env.WebRootPath, existingProduct.Image.Replace("/", "\\"));
+                            if (System.IO.File.Exists(oldImagePath))
+                            {
+                                System.IO.File.Delete(oldImagePath);
+                            }
+                        }
+
+                        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(imageFile.FileName);
+                        var filePath = Path.Combine(uploadsFolder, fileName);
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await imageFile.CopyToAsync(stream);
+                        }
+
+                        product.Image = Path.Combine("Images", fileName).Replace("\\", "/");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, "Error guardando la imagen: " + ex.Message);
             }
 
             if (ModelState.IsValid)
@@ -162,7 +212,6 @@ namespace Proyecto_Gimnasio.Controllers
             ViewData["IdCategory"] = new SelectList(_context.Categories, "IdCategory", "NameCategory", product.IdCategory);
             return View(product);
         }
-
         // GET: Products/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
