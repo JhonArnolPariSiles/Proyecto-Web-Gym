@@ -1,0 +1,42 @@
+﻿
+@{
+    ViewData["Title"] = "Reportes";
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">
+        <i class="fas fa-chart-bar"></i> Sistema de Reportes
+    </h2>
+
+    <div class="row">
+
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-box text-primary"></i> Ventas de Productos
+                    </h5>
+                    <p class="card-text">Reporte mensual de ventas de productos con totales y cantidades.</p>
+                    <a asp-action="ReporteVentasProductos" class="btn btn-primary">
+                        <i class="fas fa-chart-line"></i> Ver Reporte
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-clipboard-list text-success"></i> Ventas de Planes
+                    </h5>
+                    <p class="card-text">Reporte mensual de ventas de planes de membresía.</p>
+                    <a asp-action="ReporteVentasPlanes" class="btn btn-success">
+                        <i class="fas fa-chart-line"></i> Ver Reporte
+                    </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

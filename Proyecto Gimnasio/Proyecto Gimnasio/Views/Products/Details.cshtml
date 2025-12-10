@@ -62,7 +62,12 @@
     </dl>
 
     <div>
-        <a asp-action="Edit" asp-route-id="@Model.IdProduct" class="btn btn-warning">Editar</a>
+
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-action="Edit" asp-route-id="@Model.IdProduct" class="btn btn-warning">Editar</a>
+        }
+
         <a asp-action="Index" class="btn btn-secondary">Volver</a>
     </div>
 </div>

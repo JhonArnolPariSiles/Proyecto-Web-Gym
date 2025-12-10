@@ -32,7 +32,18 @@
                                 <a class="nav-link" asp-area="" asp-controller="Categories" asp-action="Index">Categories</a>
                             </li>
                         }
-
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Reportes" asp-action="ReporteVentasProductos">Reportes de Productos</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Reportes" asp-action="ReporteVentasPlanes">Reportes de Planes</a>
+                            </li>
+                        }
                         @if (User.IsInRole("Admin") || User.IsInRole("Employee"))
                         {
                             <li class="nav-item">
