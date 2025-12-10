@@ -1,16 +1,16 @@
 ﻿@model IEnumerable<Proyecto_Gimnasio.Models.Plans>
-
 @{
-    ViewData["Title"] = "Planes y Personas";
+    ViewData["Title"] = "Plans & Customers";
     var persons = ViewBag.Persons as List<Proyecto_Gimnasio.Models.Person>;
     var selectedPersonId = (int)ViewBag.SelectedPersonId;
     var searchName = ViewBag.SearchName as string ?? "";
 }
+<link rel="stylesheet" href="~/css/SaleProduct.css" />
 
-<h2>Planes y Personas</h2>
+<h2>Plans & Customers</h2>
 
 <div class="mb-3">
-    <a asp-action="PersonsIndex" class="btn btn-info">Ver todas las personas y sus planes</a>
+    <a asp-action="PersonsIndex" class="btn btn-info">View all customers and their plans</a>
 </div>
 
 @if (TempData["msg"] != null)
@@ -23,8 +23,8 @@
 }
 
 <form asp-action="Index" method="get" class="mb-3">
-    <input type="text" name="searchName" class="form-control" placeholder="Buscar persona..." value="@searchName" />
-    <button type="submit" class="btn btn-primary mt-2">Buscar</button>
+    <input type="text" name="searchName" class="form-control" placeholder="Search customer..." value="@searchName" />
+    <button type="submit" class="btn btn-primary mt-2">Search</button>
 </form>
 
 @if (persons != null && persons.Any())
@@ -32,9 +32,9 @@
     <table class="table table-bordered mb-4">
         <thead>
             <tr>
-                <th>Persona</th>
-                <th>Planes adquiridos</th>
-                <th>Seleccionar</th>
+                <th>Customer</th>
+                <th>Purchased Plans</th>
+                <th>Select</th>
             </tr>
         </thead>
         <tbody>
@@ -50,20 +50,20 @@
                                 {
                                     @foreach (var sd in sale.saleDetailsPlans)
                                     {
-                                        <li>@sd.Plans.NamePlan (@sd.TotalPrice.ToString("C"))</li>
+                                        <li>@sd.Plans.NamePlan (Bs @sd.TotalPrice)</li>
                                     }
                                 }
                             </ul>
                         }
                         else
                         {
-                            <span>No tiene planes</span>
+                            <span>No plans</span>
                         }
                     </td>
                     <td>
                         <form asp-action="SelectPerson" method="post">
                             <input type="hidden" name="personId" value="@person.IdPerson" />
-                            <button type="submit" class="btn btn-success btn-sm">Seleccionar</button>
+                            <button type="submit" class="btn btn-success btn-sm">Select</button>
                         </form>
                     </td>
                 </tr>
@@ -73,12 +73,12 @@
 }
 else
 {
-    <div class="alert alert-warning">No se encontraron personas.</div>
+    <div class="alert alert-warning">No customers found.</div>
 }
-<link rel="stylesheet" href="~/css/SaleProduct.css" />
+
 <hr />
 
-<h3>Planes disponibles</h3>
+<h3>Available Plans</h3>
 
 <div class="row">
     @foreach (var plan in Model)
@@ -88,12 +88,12 @@ else
                 <div class="card-body">
                     <h4>@plan.NamePlan</h4>
                     <p>@plan.Description</p>
-                    <h5>Precio: @plan.Price.ToString("C")</h5>
+                    <h5>Price: Bs @plan.Price</h5>
 
                     <form asp-action="Add" method="post">
                         <input type="hidden" name="id" value="@plan.IdPlan" />
                         <button type="submit" class="btn btn-primary" @(selectedPersonId == 0 ? "disabled" : "")>
-                            Agregar al carrito
+                            Add to Cart
                         </button>
                     </form>
                 </div>
@@ -102,4 +102,4 @@ else
     }
 </div>
 
-<a asp-action="Cart" class="btn btn-dark mt-3">Ir al carrito</a>
+<a asp-action="Cart" class="btn btn-dark mt-3">Go to Cart</a>

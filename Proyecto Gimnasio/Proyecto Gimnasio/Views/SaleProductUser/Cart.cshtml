@@ -4,21 +4,21 @@
     var cartItems = ViewBag.CartItems as List<SaleProductUserController.CartItem>;
 }
 
-<h2 class="mb-4">Carrito de Compras</h2>
+<h2 class="mb-4">Shopping Cart</h2>
 
 @if (cartItems == null || !cartItems.Any())
 {
-    <div class="alert alert-warning">El carrito está vacío</div>
-    <a asp-action="Index" class="btn btn-primary">Volver a productos</a>
+    <div class="alert alert-warning">The cart is empty</div>
+    <a asp-action="Index" class="btn btn-primary">Back to products</a>
 }
 else
 {
     <table class="table table-bordered table-hover align-middle">
         <thead class="table-dark">
             <tr>
-                <th>Producto</th>
-                <th>Precio Unitario</th>
-                <th>Cantidad</th>
+                <th>Product</th>
+                <th>Unit Price</th>
+                <th>Quantity</th>
                 <th>Subtotal</th>
                 <th></th>
             </tr>
@@ -38,7 +38,7 @@ else
                             <form asp-action="Remove" method="post" class="d-inline">
                                 <input type="hidden" name="id" value="@p.IdProduct" />
                                 <button type="submit" class="btn btn-danger btn-sm">
-                                    Quitar
+                                    Remove
                                 </button>
                             </form>
                         </td>
@@ -48,7 +48,7 @@ else
         </tbody>
         <tfoot>
             <tr class="table-success">
-                <td colspan="3" class="text-end fw-bold fs-3">TOTAL A PAGAR:</td>
+                <td colspan="3" class="text-end fw-bold fs-3">TOTAL TO PAY:</td>
                 <td class="text-end fw-bold fs-3">
                     Bs @cartItems.Sum(i => Model.First(p => p.IdProduct == i.ProductId).Price * i.Quantity)
                 </td>
@@ -58,7 +58,7 @@ else
     </table>
 
     <div class="text-end mt-4">
-        <a asp-action="Index" class="btn btn-secondary btn-lg">Seguir Comprando</a>
-        <a asp-action="Checkout" class="btn btn-success btn-lg ms-3">Procesar Compra</a>
+        <a asp-action="Index" class="btn btn-secondary btn-lg">Continue Shopping</a>
+        <a asp-action="Checkout" class="btn btn-success btn-lg ms-3">Checkout</a>
     </div>
 }

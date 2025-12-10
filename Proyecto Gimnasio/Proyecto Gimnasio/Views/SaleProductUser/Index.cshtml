@@ -1,15 +1,15 @@
 ﻿@model IEnumerable<Proyecto_Gimnasio.Models.Product>
 @{
-    ViewData["Title"] = "Tienda de Productos";
+    ViewData["Title"] = "Product Store";
 }
 
-<h2>Tienda de Productos</h2>
+<h2>Product Store</h2>
 
-<!-- Mensajes -->
+<!-- Messages -->
 @if (TempData["ok"] != null)
 {
     <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <h4 class="alert-heading">¡Compra realizada!</h4>
+        <h4 class="alert-heading">Purchase Completed!</h4>
         <p>@TempData["ok"]</p>
         <hr />
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
@@ -24,16 +24,16 @@
     <div class="alert alert-danger">@TempData["error"]</div>
 }
 
-<!-- Botón para ver historial -->
+<!-- Button to view history -->
 <div class="mb-3">
     <a asp-action="MyPurchases" class="btn btn-info">
-        Ver mis compras anteriores
+        View My Previous Purchases
     </a>
 </div>
 
 <hr />
 
-<h3>Productos disponibles</h3>
+<h3>Available Products</h3>
 <div class="row">
     @foreach (var product in Model)
     {
@@ -46,24 +46,24 @@
                 else
                 {
                     <div class="d-flex align-items-center justify-content-center bg-light" style="height:200px;">
-                        <span class="text-muted">Sin Imagen</span>
+                        <span class="text-muted">No Image</span>
                     </div>
                 }
 
                 <div class="card-body">
                     <h5 class="card-title">@product.NameProduct</h5>
                     <p class="card-text mb-1">
-                        Categoría: <span class="badge bg-secondary">@product.Category?.NameCategory</span>
+                        Category: <span class="badge bg-secondary">@product.Category?.NameCategory</span>
                     </p>
                     <p class="card-text mb-1">
                         Stock:
                         @if (product.Stock > 0)
                         {
-                            <span class="fw-bold text-success">@product.Stock unidades</span>
+                            <span class="fw-bold text-success">@product.Stock units</span>
                         }
                         else
                         {
-                            <span class="fw-bold text-danger">Agotado</span>
+                            <span class="fw-bold text-danger">Out of Stock</span>
                         }
                     </p>
                     <h4 class="text-primary mt-2">@product.Price.ToString("C")</h4>
@@ -71,7 +71,7 @@
                     <form asp-action="Add" method="post" class="mt-3">
                         <input type="hidden" name="id" value="@product.IdProduct" />
                         <div class="input-group mb-2">
-                            <span class="input-group-text">Cant.</span>
+                            <span class="input-group-text">Qty.</span>
                             <input type="number"
                                    name="quantity"
                                    value="1"
@@ -85,11 +85,11 @@
                                 @(product.Stock < 1 ? "disabled" : "")>
                             @if (product.Stock < 1)
                             {
-                                <span>Sin Stock</span>
+                                <span>Out of Stock</span>
                             }
                             else
                             {
-                                <span>Agregar al carrito</span>
+                                <span>Add to Cart</span>
                             }
                         </button>
                     </form>
@@ -99,10 +99,10 @@
     }
 </div>
 
-<!-- Botón grande del carrito (igual que el admin) -->
+<!-- Large cart button (same as admin) -->
 <div class="d-grid gap-2 mt-4 mb-5">
     <a asp-action="Cart" class="btn btn-dark btn-lg">
-        Ver Carrito y Confirmar Compra
+        View Cart and Checkout
         @if (ViewBag.CartCount > 0)
         {
             <span class="badge bg-light text-dark ms-2">@ViewBag.CartCount</span>

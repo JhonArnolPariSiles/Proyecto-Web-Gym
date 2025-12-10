@@ -1,18 +1,18 @@
 ﻿@model IEnumerable<Proyecto_Gimnasio.Models.Plans>
-
 @{
-    ViewData["Title"] = "Confirmar compra";
+    ViewData["Title"] = "Confirm Purchase";
     var person = ViewBag.Person as Proyecto_Gimnasio.Models.Person;
 }
 <link rel="stylesheet" href="~/css/SaleProduct.css" />
-<h2>Confirmar Compra</h2>
 
-<p>Compra para: <strong>@person?.Name @person?.LasName</strong></p>
+<h2>Confirm Purchase</h2>
+
+<p>Purchase for: <strong>@person?.Name @person?.LasName</strong></p>
 
 @if (!Model.Any())
 {
-    <div class="alert alert-danger">No hay elementos para procesar.</div>
-    <a asp-action="Index" class="btn btn-primary">Volver</a>
+    <div class="alert alert-danger">There are no items to process.</div>
+    <a asp-action="Index" class="btn btn-primary">Back</a>
     return;
 }
 
@@ -20,7 +20,7 @@
     <thead>
         <tr>
             <th>Plan</th>
-            <th>Precio</th>
+            <th>Price</th>
         </tr>
     </thead>
     <tbody>
@@ -28,15 +28,15 @@
         {
             <tr>
                 <td>@p.NamePlan</td>
-                <td>@p.Price.ToString("C")</td>
+                <td>Bs @p.Price</td>
             </tr>
         }
     </tbody>
 </table>
 
-<h3 class="text-end">Total: @Model.Sum(x => x.Price).ToString("C")</h3>
+<h3 class="text-end">Total: Bs @Model.Sum(x => x.Price)</h3>
 
 <form asp-action="CheckoutConfirm" method="post" class="mt-3">
-    <button type="submit" class="btn btn-success">Confirmar compra</button>
-    <a asp-action="Cart" class="btn btn-secondary">Volver al carrito</a>
+    <button type="submit" class="btn btn-success">Confirm Purchase</button>
+    <a asp-action="Cart" class="btn btn-secondary">Back to Cart</a>
 </form>

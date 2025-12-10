@@ -24,7 +24,7 @@ namespace Proyecto_Gimnasio.Controllers
 			_context = context;
 		}
 
-		// GET: Index - Muestra productos y personas con historial
+		// GET: Index - Muestra productos y personas con historial (solo clientes)
 		[HttpGet]
 		public async Task<IActionResult> Index(string searchName = "")
 		{
@@ -32,18 +32,19 @@ namespace Proyecto_Gimnasio.Controllers
 				.Include(p => p.Category)
 				.ToListAsync();
 
-			var query = _context.Persons.AsQueryable();
+			var query = _context.Persons
+				.Include(p => p.User) // Incluir User para filtrar rol
+				.Include(p => p.SaleProducts)
+					.ThenInclude(sp => sp.saleDetailsProducts)
+						.ThenInclude(d => d.Product)
+				.Where(p => p.User.Rol == "Customer"); // Solo clientes
 
 			if (!string.IsNullOrEmpty(searchName))
 			{
 				query = query.Where(p => (p.Name + " " + p.LasName).Contains(searchName));
 			}
 
-			var persons = await query
-				.Include(p => p.SaleProducts)
-					.ThenInclude(sp => sp.saleDetailsProducts)
-						.ThenInclude(d => d.Product)
-				.ToListAsync();
+			var persons = await query.ToListAsync();
 
 			ViewBag.Persons = persons;
 			ViewBag.SelectedPersonId = SelectedPersonId;
@@ -143,7 +144,7 @@ namespace Proyecto_Gimnasio.Controllers
 			return View(products);
 		}
 
-		// POST: Confirmar compra - AQUÍ ESTABA EL ERROR
+		// POST: Confirmar compra
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> CheckoutConfirm()
@@ -169,7 +170,7 @@ namespace Proyecto_Gimnasio.Controllers
 				totalVenta += p.Price * item.Quantity;
 			}
 
-			// CREAR LA VENTA DE PRODUCTOS
+			// Crear la venta de productos
 			var saleProduct = new SaleProduct
 			{
 				IdPerson = SelectedPersonId,
@@ -178,18 +179,15 @@ namespace Proyecto_Gimnasio.Controllers
 			};
 
 			_context.SalesProducts.Add(saleProduct);
+			await _context.SaveChangesAsync(); // Guardar para generar ID
 
-			// ESTO ERA LO QUE FALTABA: Guardar para generar el ID
-			await _context.SaveChangesAsync();
-
-			// AHORA SÍ podemos usar el ID generado
 			foreach (var item in CartProducts)
 			{
 				var p = productsDb.First(x => x.IdProduct == item.ProductId);
 
 				var detail = new SaleDetailsProducts
 				{
-					IdSaleProduct = saleProduct.IdSaleProduct,  // ID válido
+					IdSaleProduct = saleProduct.IdSaleProduct,
 					IdProduct = p.IdProduct,
 					Quantity = item.Quantity,
 					TotalPrice = p.Price * item.Quantity
@@ -201,7 +199,6 @@ namespace Proyecto_Gimnasio.Controllers
 
 			await _context.SaveChangesAsync();
 
-			// Limpiar
 			CartProducts.Clear();
 			SelectedPersonId = 0;
 			TempData["ok"] = "¡Compra realizada exitosamente y stock actualizado!";
@@ -209,11 +206,13 @@ namespace Proyecto_Gimnasio.Controllers
 			return RedirectToAction("Index");
 		}
 
-		// GET: PersonsIndex - Historial completo
+		// GET: PersonsIndex - Historial completo (solo clientes)
 		[HttpGet]
 		public async Task<IActionResult> PersonsIndex()
 		{
 			var persons = await _context.Persons
+				.Include(p => p.User)
+				.Where(p => p.User.Rol == "Customer") // Solo clientes
 				.Include(p => p.SaleProducts)
 					.ThenInclude(sp => sp.saleDetailsProducts)
 						.ThenInclude(d => d.Product)

@@ -1,24 +1,23 @@
 ﻿@model IEnumerable<Proyecto_Gimnasio.Models.Product>
-
 @{
-    ViewData["Title"] = "Productos y Personas";
+    ViewData["Title"] = "Products & Customers";
     var persons = ViewBag.Persons as List<Proyecto_Gimnasio.Models.Person>;
     var selectedPersonId = (int)ViewBag.SelectedPersonId;
     var searchName = ViewBag.SearchName as string ?? "";
 }
 <link rel="stylesheet" href="~/css/SaleProduct.css" />
-<h2>Productos y Personas</h2>
+
+<h2>Products & Customers</h2>
 
 @if (TempData["ok"] != null)
 {
     <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <h4 class="alert-heading">¡Compra realizada!</h4>
+        <h4 class="alert-heading">Purchase completed!</h4>
         <p>@TempData["ok"]</p>
         <hr />
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
 }
-
 @if (TempData["msg"] != null)
 {
     <div class="alert alert-info">@TempData["msg"]</div>
@@ -29,13 +28,13 @@
 }
 
 <div class="mb-3">
-    <a asp-action="PersonsIndex" class="btn btn-info">Ver todas las personas y sus compras</a>
+    <a asp-action="PersonsIndex" class="btn btn-info">View all customers and their purchases</a>
 </div>
 
 <form asp-action="Index" method="get" class="mb-3">
     <div class="input-group">
-        <input type="text" name="searchName" class="form-control" placeholder="Buscar persona por nombre..." value="@searchName" />
-        <button type="submit" class="btn btn-primary">Buscar</button>
+        <input type="text" name="searchName" class="form-control" placeholder="Search customer by name..." value="@searchName" />
+        <button type="submit" class="btn btn-primary">Search</button>
     </div>
 </form>
 
@@ -45,19 +44,18 @@
         <table class="table table-bordered mb-4">
             <thead class="table-dark">
                 <tr>
-                    <th>Persona</th>
-                    <th>Historial de Compras</th>
-                    <th>Acción</th>
+                    <th>Customer</th>
+                    <th>Purchase History</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var person in persons)
                 {
-                    // Resalta la fila si es la persona seleccionada
                     <tr class="@(person.IdPerson == selectedPersonId ? "table-success" : "")">
                         <td>
                             <strong>@person.Name @person.LasName</strong><br />
-                            <small class="text-muted">CNIT: @person.Cnit</small>
+                            <small class="text-muted">ID: @person.Cnit</small>
                         </td>
                         <td>
                             @if (person.SaleProducts != null && person.SaleProducts.Any())
@@ -67,14 +65,14 @@
                                     {
                                         @foreach (var sd in sale.saleDetailsProducts)
                                         {
-                                            <li>@sd.Product.NameProduct - (@sd.Quantity un.) - @sd.TotalPrice.ToString("C")</li>
+                                            <li>@sd.Product.NameProduct - (@sd.Quantity unit(s).) - @sd.TotalPrice.ToString("C")</li>
                                         }
                                     }
                                 </ul>
                             }
                             else
                             {
-                                <span class="text-muted">Sin compras previas</span>
+                                <span class="text-muted">No previous purchases</span>
                             }
                         </td>
                         <td>
@@ -82,11 +80,11 @@
                                 <input type="hidden" name="personId" value="@person.IdPerson" />
                                 @if (person.IdPerson == selectedPersonId)
                                 {
-                                    <button type="button" class="btn btn-success btn-sm" disabled>Seleccionado</button>
+                                    <button type="button" class="btn btn-success btn-sm" disabled>Selected</button>
                                 }
                                 else
                                 {
-                                    <button type="submit" class="btn btn-outline-success btn-sm">Seleccionar</button>
+                                    <button type="submit" class="btn btn-outline-success btn-sm">Select</button>
                                 }
                             </form>
                         </td>
@@ -98,19 +96,18 @@
 }
 else
 {
-    <div class="alert alert-warning">No se encontraron personas con ese criterio.</div>
+    <div class="alert alert-warning">No customers found with that criteria.</div>
 }
 
 <hr />
 
-<h3>Productos disponibles</h3>
+<h3>Available Products</h3>
 
 <div class="row">
     @foreach (var product in Model)
     {
         <div class="col-md-4 mb-4">
             <div class="card h-100 shadow-sm">
-
                 @if (!string.IsNullOrEmpty(product.Image))
                 {
                     <img src="~/@product.Image" class="card-img-top" style="height:200px; object-fit:cover;" alt="@product.NameProduct" />
@@ -118,54 +115,46 @@ else
                 else
                 {
                     <div class="d-flex align-items-center justify-content-center bg-light" style="height:200px;">
-                        <span class="text-muted">Sin Imagen</span>
+                        <span class="text-muted">No Image</span>
                     </div>
                 }
-
                 <div class="card-body">
                     <h5 class="card-title">@product.NameProduct</h5>
-                    <p class="card-text mb-1">Categoría: <span class="badge bg-secondary">@product.Category?.NameCategory</span></p>
-
+                    <p class="card-text mb-1">Category: <span class="badge bg-secondary">@product.Category?.NameCategory</span></p>
                     <p class="card-text mb-1">
                         Stock:
                         @if (product.Stock > 0)
                         {
-                            <span class="fw-bold text-success">@product.Stock unidades</span>
+                            <span class="fw-bold text-success">@product.Stock units</span>
                         }
                         else
                         {
-                            <span class="fw-bold text-danger">Agotado</span>
+                            <span class="fw-bold text-danger">Out of stock</span>
                         }
                     </p>
-
                     <h4 class="text-primary mt-2">@product.Price.ToString("C")</h4>
-
                     <form asp-action="Add" method="post" class="mt-3">
                         <input type="hidden" name="id" value="@product.IdProduct" />
-
                         <div class="input-group mb-2">
-                            <span class="input-group-text">Cant.</span>
+                            <span class="input-group-text">Qty.</span>
                             <input type="number" name="quantity" value="1" min="1" max="@product.Stock" class="form-control" />
                         </div>
-
                         <button type="submit" class="btn btn-primary w-100"
                                 @(selectedPersonId == 0 || product.Stock < 1 ? "disabled" : "")>
-
                             @if (selectedPersonId == 0)
                             {
-                                <span>Seleccione Persona primero</span>
+                                <span>Select a customer first</span>
                             }
                             else if (product.Stock < 1)
                             {
-                                <span>Sin Stock</span>
+                                <span>Out of Stock</span>
                             }
                             else
                             {
-                                <span>Agregar al carrito</span>
+                                <span>Add to Cart</span>
                             }
                         </button>
                     </form>
-
                 </div>
             </div>
         </div>
@@ -174,6 +163,6 @@ else
 
 <div class="d-grid gap-2 mt-4 mb-5">
     <a asp-action="Cart" class="btn btn-dark btn-lg">
-        Ver Carrito y Confirmar Compra
+        View Cart and Confirm Purchase
     </a>
 </div>
