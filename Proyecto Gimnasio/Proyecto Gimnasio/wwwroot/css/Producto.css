@@ -21,6 +21,11 @@ h1, h4, h3 {
 hr {
     border-color: var(--gris);
 }
+.table td,
+.table th {
+    color: var(--blanco);
+}
+
 
 
 .form-row {

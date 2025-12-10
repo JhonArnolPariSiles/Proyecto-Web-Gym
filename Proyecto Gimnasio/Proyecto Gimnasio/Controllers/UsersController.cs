@@ -1,13 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BCrypt.Net;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Proyecto_Gimnasio.Data;
 using Proyecto_Gimnasio.Models;
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using BCrypt.Net;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Proyecto_Gimnasio.Controllers
 {
@@ -19,6 +20,15 @@ namespace Proyecto_Gimnasio.Controllers
         public UsersController(AppDbContext context)
         {
             _context = context;
+        }
+
+        private bool EsPasswordSegura(string password)
+        {
+            if (string.IsNullOrWhiteSpace(password))
+                return false;
+
+            var regex = new Regex(@"^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_])\S{8,}$");
+            return regex.IsMatch(password);
         }
 
         // GET: Users
@@ -79,7 +89,14 @@ namespace Proyecto_Gimnasio.Controllers
             {
                 var currentUserRole = User.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.Role)?.Value;
 
-               
+                if (!EsPasswordSegura(Password))
+                {
+                    ModelState.AddModelError("Password", "La contraseña debe tener mínimo 8 caracteres, una mayúscula, una minúscula, un número y un caracter especial, sin espacios.");
+                    ViewBag.IsEmployee = currentUserRole == "Employee";
+                    ViewBag.Error = "La contraseña no cumple con los requisitos de seguridad";
+                    return View();
+                }
+
                 if (currentUserRole == "Employee" && Rol != "Customer")
                 {
                     ModelState.AddModelError("Rol", "Solo puedes crear usuarios con rol Customer");
@@ -88,7 +105,6 @@ namespace Proyecto_Gimnasio.Controllers
                     return View();
                 }
 
-           
                 if (await _context.Users.AnyAsync(u => u.Email == Email))
                 {
                     ModelState.AddModelError("Email", "Este email ya está registrado");
@@ -97,7 +113,6 @@ namespace Proyecto_Gimnasio.Controllers
                     return View();
                 }
 
-       
                 if (await _context.Persons.AnyAsync(p => p.Cnit == Cnit))
                 {
                     ModelState.AddModelError("Cnit", "Este CNIT ya está registrado");
@@ -106,7 +121,6 @@ namespace Proyecto_Gimnasio.Controllers
                     return View();
                 }
 
-               
                 var age = DateTime.Now.Year - DateBirthay.Year;
                 if (DateBirthay > DateTime.Now.AddYears(-age)) age--;
 
@@ -118,7 +132,6 @@ namespace Proyecto_Gimnasio.Controllers
                     return View();
                 }
 
-                // Validación: Fecha no puede ser futura
                 if (DateBirthay.Date > DateTime.Now.Date)
                 {
                     ModelState.AddModelError("DateBirthay", "La fecha de nacimiento no puede ser futura");
@@ -195,7 +208,6 @@ namespace Proyecto_Gimnasio.Controllers
                 return Forbid();
             }
 
-         
             ViewBag.CurrentRol = user.Rol;
             ViewBag.IsEmployee = currentUserRole == "Employee";
 
@@ -230,7 +242,6 @@ namespace Proyecto_Gimnasio.Controllers
                     return Forbid();
                 }
 
-            
                 if (await _context.Users.AnyAsync(u => u.Email == Email && u.Id != id))
                 {
                     ModelState.AddModelError("Email", "Este email ya está registrado");
@@ -243,7 +254,6 @@ namespace Proyecto_Gimnasio.Controllers
                     return View(userWithPerson);
                 }
 
-        
                 if (await _context.Persons.AnyAsync(p => p.Cnit == Cnit && p.IdPerson != IdPerson))
                 {
                     ModelState.AddModelError("Cnit", "Este CNIT ya está registrado");
@@ -256,7 +266,6 @@ namespace Proyecto_Gimnasio.Controllers
                     return View(userWithPerson);
                 }
 
-              
                 var age = DateTime.Now.Year - DateBirthay.Year;
                 if (DateBirthay > DateTime.Now.AddYears(-age)) age--;
 
@@ -272,7 +281,6 @@ namespace Proyecto_Gimnasio.Controllers
                     return View(userWithPerson);
                 }
 
-               
                 if (DateBirthay.Date > DateTime.Now.Date)
                 {
                     ModelState.AddModelError("DateBirthay", "La fecha de nacimiento no puede ser futura");
@@ -288,10 +296,21 @@ namespace Proyecto_Gimnasio.Controllers
                 user.Email = Email;
                 if (!string.IsNullOrEmpty(Password))
                 {
+                    if (!EsPasswordSegura(Password))
+                    {
+                        ModelState.AddModelError("Password", "La contraseña debe tener mínimo 8 caracteres, una mayúscula, una minúscula, un número y un caracter especial, sin espacios.");
+                        ViewBag.Error = "La contraseña no cumple con los requisitos de seguridad";
+                        ViewBag.CurrentRol = user.Rol;
+                        ViewBag.IsEmployee = currentUserRole == "Employee";
+                        var userWithPerson = await _context.Users
+                            .Include(u => u.Person)
+                            .FirstOrDefaultAsync(u => u.Id == id);
+                        return View(userWithPerson);
+                    }
+
                     user.Password = BCrypt.Net.BCrypt.HashPassword(Password);
                 }
                 user.primarySession = primarySession;
-              
 
                 _context.Update(user);
 
