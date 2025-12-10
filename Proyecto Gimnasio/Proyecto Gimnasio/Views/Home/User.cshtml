@@ -1,10 +1,10 @@
 ﻿@{
-    ViewData["Title"] = "Mi Perfil - IronGym";
-    Layout = null; /* Usamos null para que tome tus estilos propios */
+    ViewData["Title"] = "My Profile - IronGym";
+    Layout = null;
 }
 
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -18,37 +18,37 @@
         <div class="logo">IRON<span class="text-amarillo">GYM</span></div>
 
         <div class="nav-links">
-            <a asp-controller="Plans" asp-action="Index">Planes</a>
-
-            <a asp-controller="Products" asp-action="Index">Productos</a>
+            <a asp-controller="SalePlanUser" asp-action="Index">Plans</a>
+            <a asp-controller="SaleProductUser" asp-action="Index">Products</a>
         </div>
 
         <div>
-            <span class="text-azul" style="margin-right: 10px;">Hola, Cliente</span>
-            <a asp-controller="Acceso" asp-action="Logout" style="color: #ff4d4d; font-weight: bold;">Salir</a>
+            <span class="text-azul" style="margin-right: 10px;">Hello, @User.Identity?.Name</span>
+
+            <a asp-controller="Acceso" asp-action="Salir" style="color: #ff4d4d; font-weight: bold;">Logout</a>
         </div>
     </nav>
 
     <section class="hero" style="height: 90vh;">
-        <h1>BIENVENIDO AL <span class="text-amarillo">SIGUIENTE NIVEL</span></h1>
-        <p>Selecciona qué deseas hacer hoy.</p>
+        <h1>WELCOME TO THE <span class="text-amarillo">NEXT LEVEL</span></h1>
+        <p>Select what you want to do today.</p>
 
         <div class="grid-3" style="margin-top: 30px;">
 
             <div class="card">
                 <span style="font-size: 3rem;">📋</span>
-                <h3>Ver Planes</h3>
-                <p>Gestiona tu suscripción actual.</p>
-                <a asp-controller="SalePlanUser" asp-action="Index" class="btn-cta">Ir a Planes</a>
+                <h3>View Plans</h3>
+                <p>Manage your current subscription.</p>
+                <a asp-controller="SalePlanUser" asp-action="Index" class="btn-cta">Go to Plans</a>
             </div>
 
             <div class="card">
                 <span style="font-size: 3rem;">🥤</span>
-                <h3>Tienda</h3>
-                <p>Suplementos y equipamiento.</p>
-                <a asp-controller="SaleProductUser" asp-action="Index" class="btn-cta">Ir a Productos</a>
+                <h3>Store</h3>
+                <p>Supplements and equipment.</p>
+                <a asp-controller="SaleProductUser" asp-action="Index" class="btn-cta">Go to Store</a>
             </div>
-    
+
         </div>
     </section>
 
