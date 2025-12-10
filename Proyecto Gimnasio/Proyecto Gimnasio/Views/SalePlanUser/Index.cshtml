@@ -1,0 +1,65 @@
+﻿@model IEnumerable<Proyecto_Gimnasio.Models.Plans>
+<link rel="stylesheet" href="~/css/saleplansuser.css" />
+
+<div class="saleplans-container">
+    <h1 class="mb-4">Compra de Planes de Membresía</h1>
+
+    @if (TempData["ok"] != null)
+    {
+        <div class="alert alert-success">@TempData["ok"]</div>
+    }
+    @if (TempData["error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["error"]</div>
+    }
+
+    <div class="mb-4 text-end">
+        <a asp-action="MyPlans" class="btn btn-info btn-lg">Mis Planes Comprados</a>
+    </div>
+
+    <div class="row">
+        @foreach (var plan in Model)
+        {
+            var estaEnCarrito = ViewBag.CartPlans is List<int> cart && cart.Contains(plan.IdPlan);
+
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 bg-dark text-white border-primary @(estaEnCarrito ? "border-success" : "")">
+                    <div class="card-body d-flex flex-column">
+                        <h3 class="text-warning">@plan.NamePlan</h3>
+                        <p class="flex-grow-1">@plan.Description</p>
+                        <h2 class="text-success">Bs @plan.Price</h2>
+
+                        <!-- AQUÍ ESTÁ LA CLAVE: SOLO DÍA, MES Y AÑO -->
+                        <small class="text-muted">
+                            Válido del <strong>@plan.StartDate.ToString("dd/MM/yyyy")</strong>
+                            al <strong>@plan.EndDate.ToString("dd/MM/yyyy")</strong>
+                        </small>
+
+                        <form asp-action="Add" method="post" class="mt-auto">
+                            <input type="hidden" name="id" value="@plan.IdPlan" />
+                            <button type="submit" class="btn w-100 mt-3 @(estaEnCarrito ? "btn-secondary" : "btn-primary")">
+                                @if (estaEnCarrito)
+                                {
+                                    <span>Ya en el carrito</span>
+                                }
+                                else
+                                {
+                                    <span>Agregar al Carrito</span>
+                                }
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    @if (ViewBag.CartCount > 0)
+    {
+        <div class="text-center mt-5">
+            <a asp-action="Cart" class="btn btn-dark btn-lg px-5">
+                Ir al Carrito (@ViewBag.CartCount plan@(ViewBag.CartCount > 1 ? "es" : ""))
+            </a>
+        </div>
+    }
+</div>
