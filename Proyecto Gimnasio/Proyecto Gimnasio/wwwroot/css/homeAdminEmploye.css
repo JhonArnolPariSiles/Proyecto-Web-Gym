@@ -1,0 +1,72 @@
+﻿/* --- BOTONES DE DASHBOARD HOME --- */
+.home-btn {
+	display: inline-block;
+	padding: 15px 35px;
+	font-size: 1.2rem;
+	font-weight: 700;
+	text-transform: uppercase;
+	color: var(--blanco);
+	border: 2px solid transparent;
+	border-radius: 50px; /* Bordes redondeados */
+	transition: all 0.3s ease;
+	cursor: pointer;
+	text-align: center;
+	min-width: 200px;
+}
+
+/* Colores según tipo de botón */
+.home-btn-categories {
+	background-color: var(--azul-electrico);
+	border-color: var(--azul-electrico);
+}
+
+.home-btn-products {
+	background-color: var(--amarillo-neon);
+	color: var(--negro-base);
+	border-color: var(--amarillo-neon);
+}
+
+.home-btn-plans {
+	background-color: var(--azul-oscuro);
+	border-color: var(--azul-oscuro);
+}
+
+.home-btn-saleplans {
+	background-color: var(--amarillo-neon);
+	color: var(--negro-base);
+	border-color: var(--amarillo-neon);
+}
+
+.home-btn-users {
+	background-color: var(--gris);
+	color: var(--negro-base);
+	border-color: var(--gris);
+}
+
+.home-btn-saleproducts {
+	background-color: var(--azul-electrico);
+	border-color: var(--azul-electrico);
+}
+
+/* Hover efectos */
+.home-btn:hover {
+	transform: translateY(-3px);
+	box-shadow: 0 8px 20px rgba(255, 213, 0, 0.4);
+}
+
+/* Contenedor central */
+.home-btn-container {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 20px;
+	margin-top: 40px;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+	.home-btn {
+		width: 100%;
+		min-width: auto;
+	}
+}
