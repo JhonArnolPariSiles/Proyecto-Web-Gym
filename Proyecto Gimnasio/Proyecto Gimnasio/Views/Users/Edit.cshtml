@@ -35,14 +35,10 @@
             </div>
 
             <div class="form-row">
-                <div class="form-group form-check">
-                    <label class="form-check-label">
-                        <input class="form-check-input" name="primarySession" type="checkbox" @(Model.primarySession ? "checked" : "") /> Primary Session
-                    </label>
-                </div>
+                
                 <div class="form-group">
-                    <label class="control-label">Role (cannot be changed)</label>
-                    <input type="text" class="form-control" value="@Model.Rol" readonly />
+                    <label  class="control-label">Role (cannot be changed)</label>
+                    <input style="background:black" type="text" class="form-control" value="@Model.Rol" readonly />
                 </div>
             </div>
             
