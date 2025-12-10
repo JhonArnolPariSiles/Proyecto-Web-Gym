@@ -12,7 +12,7 @@ using Proyecto_Gimnasio.Data;
 namespace Proyecto_Gimnasio.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251209215542_AddnewModel")]
+    [Migration("20251210041428_AddnewModel")]
     partial class AddnewModel
     {
         /// <inheritdoc />
