@@ -45,9 +45,9 @@ namespace Proyecto_Gimnasio.Controllers
                 if (user.Person != null && user.Person.DateBirthay > DateTime.Now)
                 {
                     ModelState.AddModelError("Person.DateBirthay", "invalid Date.");
-                    return View(user); // Devuelve al usuario al formulario con el error
+                    return View(user); 
                 }
-                // ---------------------------------------
+            
 
 
 
