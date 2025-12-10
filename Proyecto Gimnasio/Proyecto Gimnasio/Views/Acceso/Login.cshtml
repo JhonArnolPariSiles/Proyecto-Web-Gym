@@ -3,7 +3,7 @@
 }
 
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>Login - IronGym</title>
@@ -14,19 +14,19 @@
 
     <div class="card">
         <div class="text-center mb-4">
-            <h3>BIENVENIDO</h3>
-            <p class="text-muted">Sistema IronGym</p>
+            <h3>WELCOME</h3>
+            <p class="text-muted">IronGym System</p>
         </div>
 
         <form asp-controller="Acceso" asp-action="Login" method="post">
 
             <div class="mb-3">
-                <label class="form-label">Correo:</label>
-                <input type="email" name="correo" class="form-control" placeholder="ejemplo@correo.com" required />
+                <label class="form-label">Email:</label>
+                <input type="email" name="correo" class="form-control" placeholder="example@email.com" required />
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Contraseña:</label>
+                <label class="form-label">Password:</label>
                 <input type="password" name="clave" class="form-control" placeholder="••••••" required />
             </div>
 
@@ -37,10 +37,10 @@
                 </div>
             }
 
-            <button type="submit" class="btn btn-primary">INGRESAR</button>
+            <button type="submit" class="btn btn-primary">LOGIN</button>
 
             <a asp-controller="UserRegister" asp-action="Create" class="btn btn-secondary">
-                Crear Cuenta
+                Create Account
             </a>
 
         </form>
