@@ -1,8 +1,24 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+<link rel="stylesheet" href="~/css/homeAdminEmploye.css" />
+<div class="d-flex flex-column align-items-center justify-content-center vh-100 text-center">
+    <h1 class="display-4 text-amarillo">Welcome</h1>
+    <p class="mb-4 text-gris">Learn about <a href="https://learn.microsoft.com/aspnet/core" class="text-azul">building Web apps with ASP.NET Core</a>.</p>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <div class="home-btn-container">
+        @if (User.IsInRole("Admin"))
+        {
+            <a class="home-btn home-btn-categories" asp-controller="Categories" asp-action="Index">Categories</a>
+        }
+        @if (User.IsInRole("Admin") || User.IsInRole("Employee"))
+        {
+            <a class="home-btn home-btn-products" asp-controller="Products" asp-action="Index">Products</a>
+            <a class="home-btn home-btn-plans" asp-controller="Plans" asp-action="Index">Plans</a>
+            <a class="home-btn home-btn-saleplans" asp-controller="SalePlan" asp-action="Index">Sale Plans</a>
+            <a class="home-btn home-btn-users" asp-controller="Users" asp-action="Index">Users</a>
+            <a class="home-btn home-btn-saleproducts" asp-controller="SaleProduct" asp-action="Index">Sale Product</a>
+        }
+    </div>
 </div>
+
