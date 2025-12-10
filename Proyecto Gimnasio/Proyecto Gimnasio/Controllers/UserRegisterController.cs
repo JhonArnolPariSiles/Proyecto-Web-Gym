@@ -31,7 +31,6 @@ namespace Proyecto_Gimnasio.Controllers
         }
 
         // POST: UserRegister/Create
-        // POST: UserRegister/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Email,Password,Person")] User user)
