@@ -35,13 +35,13 @@
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="Reportes" asp-action="ReporteVentasProductos">Reportes de Productos</a>
+                                <a class="nav-link" asp-area="" asp-controller="Reportes" asp-action="ReporteVentasProductos">Products Sales Report</a>
                             </li>
                         }
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="Reportes" asp-action="ReporteVentasPlanes">Reportes de Planes</a>
+                                <a class="nav-link" asp-area="" asp-controller="Reportes" asp-action="ReporteVentasPlanes">Plan Sales Report</a>
                             </li>
                         }
                         @if (User.IsInRole("Admin") || User.IsInRole("Employee"))
