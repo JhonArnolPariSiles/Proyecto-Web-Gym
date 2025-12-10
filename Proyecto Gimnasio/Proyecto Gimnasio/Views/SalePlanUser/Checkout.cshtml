@@ -5,10 +5,10 @@
 <link rel="stylesheet" href="~/css/saleplansuser.css" />
 
 <div class="saleplans-container">
-    <h1 class="mb-4">Confirmar Compra de Planes</h1>
+    <h1 class="mb-4">Confirm Plan Purchase</h1>
 
     <div class="alert alert-info p-4 mb-5 text-center">
-        <h4>Cliente: <strong class="text-warning">@person.Name @person.LasName</strong></h4>
+        <h4>Customer: <strong class="text-warning">@person.Name @person.LasName</strong></h4>
         <p>DNI: @person.Cnit</p>
     </div>
 
@@ -16,7 +16,7 @@
         <thead class="table-primary">
             <tr>
                 <th>Plan</th>
-                <th>Precio</th>
+                <th>Price</th>
             </tr>
         </thead>
         <tbody>
@@ -35,7 +35,7 @@
         </tbody>
         <tfoot>
             <tr class="table-success fw-bold fs-3">
-                <td class="text-end">TOTAL A PAGAR:</td>
+                <td class="text-end">TOTAL AMOUNT:</td>
                 <td class="text-end">Bs @Model.Sum(p => p.Price)</td>
             </tr>
         </tfoot>
@@ -45,11 +45,11 @@
         <form asp-action="CheckoutConfirm" method="post">
             @Html.AntiForgeryToken()
             <button type="submit" class="btn btn-success btn-lg px-5">
-                Confirmar y Finalizar Compra
+                Confirm & Complete Purchase
             </button>
         </form>
         <a asp-action="Cart" class="btn btn-secondary btn-lg d-block mt-3">
-            Volver al Carrito
+            Back to Cart
         </a>
     </div>
 </div>

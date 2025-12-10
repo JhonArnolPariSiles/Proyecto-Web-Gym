@@ -1,16 +1,16 @@
 ﻿@model IEnumerable<Proyecto_Gimnasio.Models.Person>
-
 @{
-    ViewData["Title"] = "Personas y sus productos comprados";
+    ViewData["Title"] = "Customers and their purchased products";
 }
 <link rel="stylesheet" href="~/css/SaleProduct.css" />
-<h2>Personas y sus productos</h2>
+
+<h2>Customers and their products</h2>
 
 <table class="table table-bordered">
     <thead>
         <tr>
-            <th>Persona</th>
-            <th>Productos Comprados</th>
+            <th>Customer</th>
+            <th>Purchased Products</th>
         </tr>
     </thead>
     <tbody>
@@ -36,7 +36,7 @@
                     }
                     else
                     {
-                        <span>No tiene compras</span>
+                        <span>No purchases</span>
                     }
                 </td>
             </tr>
