@@ -1,10 +1,10 @@
 ﻿@{
-    ViewData["Title"] = "Gimnasio - Landing Page";
+    ViewData["Title"] = "Gym - Landing Page";
     Layout = null;
 }
 
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -17,78 +17,65 @@
     <nav class="navbar">
         <div class="logo">IRON<span class="text-amarillo">GYM</span></div>
         <div class="nav-links">
-            <a href="#">Inicio</a>
-            <a href="#">Clases</a>
-            <a href="#">Planes</a>
+            <a href="#">Home</a>
+            <a href="#">Classes</a>
+            <a href="#">Products</a>
         </div>
         <a class="nav-link text-dark" asp-area="" asp-controller="Acceso" asp-action="Login">Login</a>
     </nav>
 
     <section class="hero">
-        <h1>SUPERA TUS <span class="text-azul">LÍMITES</span></h1>
-        <p>Entrenamiento de alto rendimiento, pesas libres y cardio. Abierto 24/7.</p>
-        <button class="btn-cta">EMPEZAR AHORA</button>
+        <h1>PUSH YOUR <span class="text-azul">LIMITS</span></h1>
+        <p>High-performance training, free weights, and cardio. Open 24/7.</p>
+
+        <a asp-controller="Acceso" asp-action="Login" class="btn-cta">START NOW</a>
     </section>
 
     <section class="services section-padding">
-        <h2>Nuestras <span class="text-amarillo">Ventajas</span></h2>
+        <h2>Our <span class="text-amarillo">Advantages</span></h2>
         <div class="grid-3">
             <div class="card">
                 <span style="font-size:2rem;">💪</span>
-                <h3>Zona de Pesas</h3>
-                <p>Equipamiento olímpico completo.</p>
+                <h3>Weight Zone</h3>
+                <p>Full Olympic equipment.</p>
             </div>
             <div class="card">
                 <span style="font-size:2rem;">⏱️</span>
-                <h3>Abierto 24/7</h3>
-                <p>Entrena cuando quieras.</p>
+                <h3>Open 24/7</h3>
+                <p>Train whenever you want.</p>
             </div>
             <div class="card">
                 <span style="font-size:2rem;">💃</span>
                 <h3>Zumba</h3>
-                <p>Clases llenas de energía y ritmo.</p>
+                <p>Classes full of energy and rhythm.</p>
             </div>
         </div>
     </section>
 
     <section class="pricing section-padding">
-        <h2>Elige tu <span class="text-azul">Nivel</span></h2>
+        <h2>Our Best <span class="text-azul">Products</span></h2>
         <div class="grid-3">
-            <div class="price-card">
-                <h3>Básico</h3>
-                <div class="price">$20<span>/mes</span></div>
-                <ul class="price-features">
-                    <li>Acceso Mañanas</li>
-                    <li>Zona Cardio</li>
-                </ul>
+            <div class="card">
+                <span style="font-size:3rem;">🥤</span>
+                <h3>Whey Protein</h3>
+                <p>Maximum muscle recovery after training.</p>
             </div>
-            <div class="price-card featured">
-                <div style="position:absolute; top:-12px; left:0; right:0;">
-                    <span style="background:var(--amarillo-neon); color:black; padding:2px 10px; font-weight:bold; font-size:0.8rem;">RECOMENDADO</span>
-                </div>
-                <h3>PRO</h3>
-                <div class="price">$35<span>/mes</span></div>
-                <ul class="price-features">
-                    <li>Acceso 24/7</li>
-                    <li>Todas las Zonas</li>
-                    <li>Clases Grupales</li>
-                </ul>
-                <button class="btn-cta">Mira nuestros planes</button>
+            <div class="card">
+                <span style="font-size:3rem;">⚡</span>
+                <h3>Pre-Workout</h3>
+                <p>Energy boost to push your limits.</p>
             </div>
-            <div class="price-card">
-                <h3>Elite</h3>
-                <div class="price">$50<span>/mes</span></div>
-                <ul class="price-features">
-                    <li>Todo Incluido</li>
-                    <li>Entrenador Personal</li>
-                </ul>
+            <div class="card">
+                <span style="font-size:3rem;">👕</span>
+                <h3>Gym Gear</h3>
+                <p>Comfortable clothing for high performance.</p>
             </div>
         </div>
     </section>
 
     <footer>
-        <h2>¿Listo para el cambio?</h2>
-        <p>Visítanos o contáctanos hoy mismo.</p>
+        <h2>Ready for the change?</h2>
+        <p>Visit us or contact us today.</p>
         <br>
         <p style="font-size: 0.8rem; opacity: 0.7;">&copy; 2025 IronGym.</p>
     </footer>
