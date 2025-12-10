@@ -1,24 +1,24 @@
-﻿/* --- 1. FONDO Y CENTRADO --- */
+﻿
 body {
-    background-color: #121212; /* Fondo Negro */
-    color: #F5F5F5; /* Texto Blanco */
+    background-color: #121212; 
+    color: #F5F5F5; 
     font-family: sans-serif;
-    height: 100vh; /* Altura completa de la pantalla */
-    display: flex; /* Para centrar la tarjeta */
-    justify-content: center; /* Centrado horizontal */
-    align-items: center; /* Centrado vertical */
+    height: 100vh; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
     margin: 0;
 }
 
 /* --- 2. LA TARJETA (Caja del login) --- */
 .card {
-    background-color: #1E1E1E; /* Gris oscuro */
+    background-color: #1E1E1E; 
     width: 350px;
     padding: 30px;
     border-radius: 10px;
-    border: 1px solid #333; /* Borde sutil */
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5); /* Sombra elegante */
-    border-top: 4px solid #FFD500; /* Detalle amarillo arriba */
+    border: 1px solid #333; 
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5); 
+    border-top: 4px solid #FFD500; /
 }
 
 /* --- 3. INPUTS (Cajas de texto) --- */
@@ -26,15 +26,15 @@ body {
     background-color: #121212;
     border: 1px solid #444;
     color: white;
-    margin-bottom: 15px; /* Espacio entre inputs */
+    margin-bottom: 15px; 
 }
 
     /* Al hacer clic en el input */
     .form-control:focus {
         background-color: #121212;
         color: white;
-        border-color: #FFD500; /* Se ilumina amarillo */
-        box-shadow: none; /* Quita el brillo azul de Bootstrap */
+        border-color: #FFD500; 
+        box-shadow: none; 
     }
 
 /* --- 4. BOTONES --- */
@@ -53,7 +53,7 @@ body {
         color: black;
     }
 
-/* Botón Registrarse (Transparente/Borde) */
+/* Botón Registrarse  */
 .btn-secondary {
     background-color: transparent;
     border: 1px solid #555;

@@ -52,7 +52,7 @@ namespace Proyecto_Gimnasio.Controllers
 			return View(await query.ToListAsync());
 		}
 
-		// Reporte de ventas de planes por mes
+		
 		public async Task<IActionResult> ReporteVentasPlanes(int? year)
 		{
 			var query = _context.Sales
@@ -76,7 +76,9 @@ namespace Proyecto_Gimnasio.Controllers
 				.OrderBy(x => x.Year)
 				.ThenBy(x => x.Month);
 
-			// Filtrar por año si se especifica
+		
+
+
 			if (year.HasValue)
 			{
 				var filteredQuery = query.Where(x => x.Year == year.Value);
@@ -89,7 +91,7 @@ namespace Proyecto_Gimnasio.Controllers
 
 		
 
-		// Método para obtener los años disponibles (para filtros)
+		
 		public async Task<JsonResult> GetAvailableYears()
 		{
 			var yearsProductos = await _context.SalesProducts

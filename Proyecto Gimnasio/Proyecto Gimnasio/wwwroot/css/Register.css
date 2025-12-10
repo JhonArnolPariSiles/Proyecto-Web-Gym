@@ -1,4 +1,4 @@
-﻿/* 1. VARIABLES Y BASE */
+﻿
 :root {
     --amarillo-neon: #FFD500;
     --azul: #00509D;
@@ -27,7 +27,7 @@ ul {
     list-style: none;
 }
 
-/* CLASES DE TEXTO (Para que funcione tu HTML) */
+/* CLASES DE TEXTO funciones html */
 .text-amarillo {
     color: var(--amarillo-neon);
 }
@@ -77,7 +77,7 @@ ul {
         margin-bottom: 15px;
     }
 
-/* 4. BOTÓN (ARREGLADO: Ya no se estira) */
+/* 4. BOTÓN */
 .btn-cta {
     display: inline-block;
     background: var(--amarillo-neon);
@@ -94,7 +94,7 @@ ul {
         transform: scale(1.05);
     }
 
-/* 5. GRID Y TARJETAS (Servicios + Precios juntos) */
+/* 5. GRID Y TARJETAS */
 .section-padding {
     padding: 60px 10%;
 }

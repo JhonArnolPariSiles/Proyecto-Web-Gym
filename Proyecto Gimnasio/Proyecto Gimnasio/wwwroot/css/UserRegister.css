@@ -1,9 +1,12 @@
-﻿/* 1. FONDO Y TEXTO */
+﻿/* --- 1. FONDO GENERAL Y TEXTO --- */
+
 body {
     background: #121212;
     color: #eee;
     font-family: sans-serif;
 }
+
+/* --- 2. TÍTULO PRINCIPAL --- */
 
 h1 {
     color: #FFD500;
@@ -12,42 +15,46 @@ h1 {
     margin: 30px 0;
 }
 
-/* 2. TARJETA CENTRADA */
+/* --- 3. ESTRUCTURA Y TARJETA --- */
+
 .row {
     justify-content: center;
     margin-top: 20px;
 }
 
 .col-md-6 {
-    background: #1E1E1E; /* Gris oscuro */
-    padding: 40px; /* Espacio interno */
-    border-radius: 10px; /* Bordes redondos */
-    border: 1px solid #333; /* Borde fino */
-    box-shadow: 0 5px 15px rgba(0,0,0,0.5); /* Sombra elegante */
+    background: #1E1E1E;
+    padding: 40px;
+    border-radius: 10px;
+    border: 1px solid #333;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
 }
 
-/* 3. INPUTS (Cajas de texto) */
+/* --- 4. CAMPOS DE TEXTO (INPUTS) --- */
+
 .form-control {
     background: #121212;
     border: 1px solid #444;
     color: white;
     padding: 10px;
 }
-    /* Al hacer clic en el input */
+
+    
     .form-control:focus {
         background: #121212;
         color: white;
-        border-color: #FFD500; /* Se ilumina amarillo */
+        border-color: #FFD500;
         box-shadow: none;
     }
 
-/* 4. BOTÓN Y ENLACES */
+/* --- 5. BOTÓN DE REGISTRO --- */
+
 .btn-primary {
     background: #FFD500;
     color: #000;
     font-weight: bold;
     border: none;
-    width: 100%; /* Botón ancho */
+    width: 100%;
     padding: 12px;
     margin-top: 15px;
 }
@@ -55,7 +62,8 @@ h1 {
     .btn-primary:hover {
         background: #e6c200;
     }
-/* Efecto al pasar mouse */
+
+/* --- 6. ENLACES --- */
 
 a {
     color: #FFD500;

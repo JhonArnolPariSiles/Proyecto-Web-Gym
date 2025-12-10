@@ -14,7 +14,6 @@ namespace Proyecto_Gimnasio.Models
 
         public string NameCategory { get; set; }
 
-		// Una categoría tiene muchos productos
 		public ICollection<Product>? Products { get; set; }
 
 	}

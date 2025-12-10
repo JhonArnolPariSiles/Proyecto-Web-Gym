@@ -16,16 +16,15 @@ namespace Proyecto_Gimnasio.Controllers
 			_context = context;
 		}
 
-		// Mostrar planes y permitir buscar personas (solo clientes)
+	
 		[HttpGet]
 		public async Task<IActionResult> Index(string searchName = "")
 		{
 			var plans = await _context.Planss.ToListAsync();
 
 			var personsQuery = _context.Persons
-				.Include(p => p.User) // Incluir User para poder filtrar por rol
-				.Where(p => p.User.Rol == "Customer"); // Solo clientes
-
+				.Include(p => p.User) 
+				.Where(p => p.User.Rol == "Customer");
 			if (!string.IsNullOrEmpty(searchName))
 			{
 				personsQuery = personsQuery
@@ -149,13 +148,13 @@ namespace Proyecto_Gimnasio.Controllers
 			return RedirectToAction("Index");
 		}
 
-		// Mostrar personas y los planes que tienen (solo clientes)
+	
 		[HttpGet]
 		public async Task<IActionResult> PersonsIndex()
 		{
 			var persons = await _context.Persons
 				.Include(p => p.User)
-				.Where(p => p.User.Rol == "Customer") // Solo clientes
+				.Where(p => p.User.Rol == "Customer") 
 				.Include(p => p.Sales)
 					.ThenInclude(s => s.saleDetailsPlans)
 						.ThenInclude(sd => sd.Plans)

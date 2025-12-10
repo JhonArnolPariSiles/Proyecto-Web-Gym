@@ -134,7 +134,7 @@ namespace Proyecto_Gimnasio.Controllers
             return View(user);
         }
 
-        // POST: Users1/Delete/5
+        
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

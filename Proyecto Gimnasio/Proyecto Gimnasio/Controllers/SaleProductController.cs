@@ -15,7 +15,7 @@ namespace Proyecto_Gimnasio.Controllers
 	{
 		private readonly AppDbContext _context;
 
-		// Carrito y persona seleccionada (estático para demo)
+	
 		private static List<CartItem> CartProducts = new List<CartItem>();
 		private static int SelectedPersonId = 0;
 
@@ -24,7 +24,7 @@ namespace Proyecto_Gimnasio.Controllers
 			_context = context;
 		}
 
-		// GET: Index - Muestra productos y personas con historial (solo clientes)
+	
 		[HttpGet]
 		public async Task<IActionResult> Index(string searchName = "")
 		{
@@ -33,11 +33,11 @@ namespace Proyecto_Gimnasio.Controllers
 				.ToListAsync();
 
 			var query = _context.Persons
-				.Include(p => p.User) // Incluir User para filtrar rol
+				.Include(p => p.User) 
 				.Include(p => p.SaleProducts)
 					.ThenInclude(sp => sp.saleDetailsProducts)
 						.ThenInclude(d => d.Product)
-				.Where(p => p.User.Rol == "Customer"); // Solo clientes
+				.Where(p => p.User.Rol == "Customer"); 
 
 			if (!string.IsNullOrEmpty(searchName))
 			{
@@ -53,7 +53,7 @@ namespace Proyecto_Gimnasio.Controllers
 			return View(products);
 		}
 
-		// POST: Seleccionar persona
+		
 		[HttpPost]
 		public IActionResult SelectPerson(int personId)
 		{
@@ -62,7 +62,7 @@ namespace Proyecto_Gimnasio.Controllers
 			return RedirectToAction("Index");
 		}
 
-		// POST: Agregar al carrito
+	
 		[HttpPost]
 		public async Task<IActionResult> Add(int id, int quantity)
 		{
@@ -99,7 +99,7 @@ namespace Proyecto_Gimnasio.Controllers
 			return RedirectToAction("Index");
 		}
 
-		// GET: Carrito
+	
 		[HttpGet]
 		public async Task<IActionResult> Cart()
 		{
@@ -115,7 +115,7 @@ namespace Proyecto_Gimnasio.Controllers
 			return View(products);
 		}
 
-		// POST: Quitar del carrito
+		
 		[HttpPost]
 		public IActionResult Remove(int id)
 		{
@@ -123,7 +123,7 @@ namespace Proyecto_Gimnasio.Controllers
 			return RedirectToAction("Cart");
 		}
 
-		// GET: Checkout
+		
 		[HttpGet]
 		public async Task<IActionResult> Checkout()
 		{
@@ -144,7 +144,7 @@ namespace Proyecto_Gimnasio.Controllers
 			return View(products);
 		}
 
-		// POST: Confirmar compra
+	
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> CheckoutConfirm()
@@ -170,7 +170,7 @@ namespace Proyecto_Gimnasio.Controllers
 				totalVenta += p.Price * item.Quantity;
 			}
 
-			// Crear la venta de productos
+		
 			var saleProduct = new SaleProduct
 			{
 				IdPerson = SelectedPersonId,
@@ -179,7 +179,7 @@ namespace Proyecto_Gimnasio.Controllers
 			};
 
 			_context.SalesProducts.Add(saleProduct);
-			await _context.SaveChangesAsync(); // Guardar para generar ID
+			await _context.SaveChangesAsync(); 
 
 			foreach (var item in CartProducts)
 			{
@@ -194,7 +194,7 @@ namespace Proyecto_Gimnasio.Controllers
 				};
 
 				_context.saleDetailsProducts.Add(detail);
-				p.Stock -= item.Quantity; // Restar stock
+				p.Stock -= item.Quantity; 
 			}
 
 			await _context.SaveChangesAsync();
@@ -206,13 +206,13 @@ namespace Proyecto_Gimnasio.Controllers
 			return RedirectToAction("Index");
 		}
 
-		// GET: PersonsIndex - Historial completo (solo clientes)
+		
 		[HttpGet]
 		public async Task<IActionResult> PersonsIndex()
 		{
 			var persons = await _context.Persons
 				.Include(p => p.User)
-				.Where(p => p.User.Rol == "Customer") // Solo clientes
+				.Where(p => p.User.Rol == "Customer") 
 				.Include(p => p.SaleProducts)
 					.ThenInclude(sp => sp.saleDetailsProducts)
 						.ThenInclude(d => d.Product)

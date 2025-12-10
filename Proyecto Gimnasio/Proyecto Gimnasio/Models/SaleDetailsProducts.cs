@@ -19,13 +19,13 @@ namespace Proyecto_Gimnasio.Models
 		[Range(0.01, double.MaxValue, ErrorMessage = "Total Price must be greater than 0")]
 		public double TotalPrice { get; set; }
 
-		// 1-m sale 
+
 		public int IdSaleProduct { get; set; }
 
 		[ForeignKey("IdSaleProduct")]
 		public SaleProduct saleProduct { get; set; }
 
-		// 1-m product
+
 		public int IdProduct { get; set; }
 
 		[ForeignKey("IdProduct")]

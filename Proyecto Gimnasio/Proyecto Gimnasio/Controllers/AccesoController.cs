@@ -20,16 +20,16 @@ namespace Proyecto_Gimnasio.Controllers
         // 1. VISTA DE LOGIN (GET)
         public IActionResult Login()
         {
-            // Si el usuario ya inició sesión, revisamos su rol para redirigirlo
+            
             if (User.Identity!.IsAuthenticated)
             {
-                // Si es Cliente -> Va a su Perfil
+                
                 if (User.IsInRole("Customer"))
                 {
                     return RedirectToAction("User", "Home");
                 }
 
-                // Si es Admin o Employee -> Va al Index principal
+              
                 return RedirectToAction("Index", "Home");
             }
             return View();
@@ -39,18 +39,18 @@ namespace Proyecto_Gimnasio.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string correo, string clave)
         {
-            // Buscar usuario
+           
             var usuario = await _context.Users
                 .FirstOrDefaultAsync(u => u.Email == correo);
 
-            // Validar usuario y contraseña
+          
             if (usuario == null || !BCrypt.Net.BCrypt.Verify(clave, usuario.Password))
             {
                 ViewBag.Error = "Correo o contraseña incorrectos";
                 return View();
             }
 
-            // CREAR LA COOKIE DE SESIÓN
+         
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, usuario.Email),
@@ -62,22 +62,25 @@ namespace Proyecto_Gimnasio.Controllers
 
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 
-            // --- LÓGICA DE REDIRECCIÓN FINAL ---
+       
 
             if (usuario.Rol == "Customer")
             {
-                // Solo el cliente va a la vista "User"
+            
                 return RedirectToAction("User", "Home");
             }
             else
             {
-                // AQUÍ ENTRAN "Admin" Y "Employee"
-                // Ambos van al Dashboard principal (Index)
+              
                 return RedirectToAction("Index", "Home");
             }
         }
 
-        // 3. CERRAR SESIÓN
+     
+
+
+
+
         public async Task<IActionResult> Salir()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);

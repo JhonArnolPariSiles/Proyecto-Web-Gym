@@ -12,7 +12,6 @@ namespace Proyecto_Gimnasio.Controllers
 	{
 		private readonly AppDbContext _context;
 
-		// Carrito simple: solo IDs de planes (máximo 1 por plan)
 		private static List<int> CartPlans = new List<int>();
 
 		public SalePlanUserController(AppDbContext context)
@@ -20,7 +19,7 @@ namespace Proyecto_Gimnasio.Controllers
 			_context = context;
 		}
 
-		// GET: Mostrar planes disponibles
+		
 		public async Task<IActionResult> Index()
 		{
 			var plans = await _context.Planss.ToListAsync();
@@ -28,13 +27,13 @@ namespace Proyecto_Gimnasio.Controllers
 			ViewBag.CartPlans = CartPlans;
 			ViewBag.CartCount = CartPlans.Count;
 
-			// Opcional: marcar cuáles están activos
+		
 			ViewBag.CurrentDate = DateTime.Now;
 
 			return View(plans);
 		}
 
-		// POST: Agregar plan al carrito (solo 1 vez)
+	
 		[HttpPost]
 		public async Task<IActionResult> Add(int id)
 		{
@@ -58,7 +57,7 @@ namespace Proyecto_Gimnasio.Controllers
 			return RedirectToAction("Index");
 		}
 
-		// GET: Carrito
+	
 		public async Task<IActionResult> Cart()
 		{
 			var plans = await _context.Planss
@@ -69,7 +68,7 @@ namespace Proyecto_Gimnasio.Controllers
 			return View(plans);
 		}
 
-		// POST: Quitar del carrito
+		
 		[HttpPost]
 		public IActionResult Remove(int id)
 		{
@@ -168,7 +167,6 @@ namespace Proyecto_Gimnasio.Controllers
 			return RedirectToAction("Index");
 		}
 
-		// Historial de planes comprados
 		public async Task<IActionResult> MyPlans()
 		{
 			var userId = int.Parse(User.FindFirst("IdUsuario")!.Value);

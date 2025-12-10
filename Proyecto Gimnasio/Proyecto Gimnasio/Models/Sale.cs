@@ -19,8 +19,9 @@ namespace Proyecto_Gimnasio.Models
 		[Display(Name = "DATE SALE")]
 		[DataType(DataType.Date)]
 		public DateTime DateSale { get; set; }
+    
 
-		// FK a persona
+
 		public int IdPerson { get; set; }
 
 		[ForeignKey("IdPerson")]

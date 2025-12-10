@@ -131,7 +131,7 @@ h1, h2, h3, h4 {
     .table th, .table td {
         padding: 15px;
         border-color: var(--azul-oscuro);
-        color: white !important; /* <-- TEXTO SIEMPRE BLANCO */
+        color: white !important; 
         font-weight: 500;
     }
 

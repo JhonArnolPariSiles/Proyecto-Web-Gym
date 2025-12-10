@@ -60,6 +60,6 @@ namespace Proyecto_Gimnasio.Models
 		public int UserId { get; set; }
 
 		[ForeignKey("UserId")]
-		public User User { get; set; } = null!; // null! para evitar warnings si usas nullable reference types
+		public User User { get; set; } = null!; 
 	}
 }

@@ -12,7 +12,7 @@ namespace Proyecto_Gimnasio.Controllers
 	{
 		private readonly AppDbContext _context;
 
-		// Carrito con cantidad
+		
 		private static List<CartItem> CartProducts = new List<CartItem>();
 
 		public class CartItem
@@ -26,7 +26,7 @@ namespace Proyecto_Gimnasio.Controllers
 			_context = context;
 		}
 
-		// GET: Productos disponibles
+	
 		public async Task<IActionResult> Index()
 		{
 			if (!User.Identity!.IsAuthenticated)
@@ -40,7 +40,7 @@ namespace Proyecto_Gimnasio.Controllers
 			return View(products);
 		}
 
-		// POST: Agregar al carrito (con cantidad)
+		
 		[HttpPost]
 		public async Task<IActionResult> Add(int id, int quantity = 1)
 		{
@@ -73,7 +73,7 @@ namespace Proyecto_Gimnasio.Controllers
 			return RedirectToAction("Index");
 		}
 
-		// GET: Carrito
+
 		public async Task<IActionResult> Cart()
 		{
 			var ids = CartProducts.Select(c => c.ProductId).ToList();
@@ -85,7 +85,7 @@ namespace Proyecto_Gimnasio.Controllers
 			return View(products);
 		}
 
-		// POST: Quitar del carrito
+	
 		[HttpPost]
 		public IActionResult Remove(int id)
 		{
@@ -93,7 +93,7 @@ namespace Proyecto_Gimnasio.Controllers
 			return RedirectToAction("Cart");
 		}
 
-		// GET: Checkout
+	
 		public async Task<IActionResult> Checkout()
 		{
 			if (!CartProducts.Any())
@@ -124,7 +124,7 @@ namespace Proyecto_Gimnasio.Controllers
 			return View(products);
 		}
 
-		// POST: Confirmar compra
+	
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> CheckoutConfirm()
@@ -151,7 +151,6 @@ namespace Proyecto_Gimnasio.Controllers
 				.Where(p => CartProducts.Select(c => c.ProductId).Contains(p.IdProduct))
 				.ToListAsync();
 
-			// Validar stock final
 			foreach (var item in CartProducts)
 			{
 				var p = productsInCart.FirstOrDefault(x => x.IdProduct == item.ProductId);
@@ -169,7 +168,7 @@ namespace Proyecto_Gimnasio.Controllers
 				total += p.Price * item.Quantity;
 			}
 
-			// CREAR LA VENTA CON SaleProduct
+			
 			var saleProduct = new SaleProduct
 			{
 				IdPerson = personId,
@@ -178,9 +177,9 @@ namespace Proyecto_Gimnasio.Controllers
 			};
 
 			_context.SalesProducts.Add(saleProduct);
-			await _context.SaveChangesAsync(); // Genera el IdSaleProduct
+			await _context.SaveChangesAsync(); 
 
-			// Guardar detalles y restar stock
+	
 			foreach (var item in CartProducts)
 			{
 				var p = productsInCart.First(x => x.IdProduct == item.ProductId);
@@ -203,7 +202,7 @@ namespace Proyecto_Gimnasio.Controllers
 			return RedirectToAction("Index");
 		}
 
-		// MOSTRAR MIS COMPRAS (esto era lo que fallaba)
+	
 		public async Task<IActionResult> MyPurchases()
 		{
 			var userId = int.Parse(User.FindFirst("IdUsuario")!.Value);
