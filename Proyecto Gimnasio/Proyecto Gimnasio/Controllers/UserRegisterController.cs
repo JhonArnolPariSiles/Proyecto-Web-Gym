@@ -38,8 +38,22 @@ namespace Proyecto_Gimnasio.Controllers
         {
             try
             {
-                // 1. VALIDAR DUPLICADOS
-                if (await _context.Users.AnyAsync(u => u.Email == user.Email))
+
+
+
+
+                if (user.Person != null && user.Person.DateBirthay > DateTime.Now)
+                {
+                    ModelState.AddModelError("Person.DateBirthay", "invalid Date.");
+                    return View(user); // Devuelve al usuario al formulario con el error
+                }
+                // ---------------------------------------
+
+
+
+
+                    // 1. VALIDAR DUPLICADOS
+                    if (await _context.Users.AnyAsync(u => u.Email == user.Email))
                 {
                     ModelState.AddModelError("Email", "Este email ya está registrado");
                     return View(user);

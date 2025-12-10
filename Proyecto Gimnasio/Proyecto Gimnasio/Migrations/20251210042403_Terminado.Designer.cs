@@ -12,8 +12,8 @@ using Proyecto_Gimnasio.Data;
 namespace Proyecto_Gimnasio.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251210041428_AddnewModel")]
-    partial class AddnewModel
+    [Migration("20251210042403_Terminado")]
+    partial class Terminado
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

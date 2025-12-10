@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Proyecto_Gimnasio.Migrations
 {
     /// <inheritdoc />
-    public partial class AddnewModel : Migration
+    public partial class Terminado : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
