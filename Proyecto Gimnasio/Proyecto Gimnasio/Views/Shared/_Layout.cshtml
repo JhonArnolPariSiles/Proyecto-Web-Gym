@@ -67,6 +67,18 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="SaleProductUser" asp-action="MyPurchases">Procuct Sale User</a>
                             </li>
                         }
+                        @if (User.IsInRole("Customer"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="SalePlanUser" asp-action="MyPlans">Plan Sale User</a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Customer"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="SalePlanUser" asp-action="Index">Buy Plans</a>
+                            </li>
+                        }
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Acceso" asp-action="Salir">Logout</a>
                         </li>
