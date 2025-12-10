@@ -10,19 +10,19 @@
             <i class="fas fa-box text-primary"></i> Products Sales Report
         </h2>
         <a asp-action="Index" class="btn btn-secondary">
-            <i class="fas fa-arrow-left"></i> Volver
+            <i class="fas fa-arrow-left"></i> Return
         </a>
     </div>
 
-    <!-- Filtro por Año -->
+
     <div class="card mb-4">
         <div class="card-body">
             <form method="get" asp-action="ReporteVentasProductos">
                 <div class="row">
                     <div class="col-md-4">
-                        <label for="year" class="form-label">Filtrar por Año:</label>
+                        <label for="year" class="form-label">Filter by Year:</label>
                         <select name="year" id="year" class="form-select">
-                            <option value="">Todos los años</option>
+                            <option value="">All Years</option>
                             @for (int i = DateTime.Now.Year; i >= DateTime.Now.Year - 5; i--)
                             {
                                 <option value="@i" selected="@(ViewBag.SelectedYear == i)">@i</option>
@@ -31,7 +31,7 @@
                     </div>
                     <div class="col-md-2 d-flex align-items-end">
                         <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-filter"></i> Filtrar
+                            <i class="fas fa-filter"></i> Filter
                         </button>
                     </div>
                 </div>
