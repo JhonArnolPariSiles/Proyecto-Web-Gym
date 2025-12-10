@@ -23,7 +23,7 @@ namespace Proyecto_Gimnasio.Controllers
             // Si ya está logueado, lo mandamos al menú principal
             if (User.Identity!.IsAuthenticated)
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("User", "Home");
             }
             return View();
         }
@@ -57,7 +57,7 @@ namespace Proyecto_Gimnasio.Controllers
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 
             // Redirigir al Home
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("User", "Home");
         }
 
         // 3. Cerrar Sesión
