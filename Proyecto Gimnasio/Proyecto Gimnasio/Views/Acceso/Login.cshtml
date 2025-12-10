@@ -6,40 +6,43 @@
 <html lang="es">
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>Login - Gimnasio</title>
+    <title>Login - IronGym</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/Login.css" />
 </head>
-<body class="bg-white d-flex justify-content-center align-items-center" style="height: 100vh;">
+<body>
 
-    <div class="card shadow p-4" style="width: 350px; background-color: white; border-radius: 15px;">
+    <div class="card">
         <div class="text-center mb-4">
-            <h3>Bienvenido</h3>
-            <p class="text-muted">Sistema Gimnasio</p>
+            <h3>BIENVENIDO</h3>
+            <p class="text-muted">Sistema IronGym</p>
         </div>
 
         <form asp-controller="Acceso" asp-action="Login" method="post">
+
             <div class="mb-3">
                 <label class="form-label">Correo:</label>
-                <input type="email" name="correo" class="form-control" required />
+                <input type="email" name="correo" class="form-control" placeholder="ejemplo@correo.com" required />
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Contraseña:</label>
-                <input type="password" name="clave" class="form-control" required />
+                <input type="password" name="clave" class="form-control" placeholder="••••••" required />
             </div>
 
             @if (ViewBag.Error != null)
             {
-                <div class="alert alert-danger text-center p-2">
+                <div class="alert alert-danger text-center p-2" style="background: #3c0000; border: 1px solid red; color: white;">
                     @ViewBag.Error
                 </div>
             }
 
-            <button type="submit" class="btn btn-dark w-100 mt-3">Ingresar</button>
+            <button type="submit" class="btn btn-primary">INGRESAR</button>
 
             <a asp-controller="UserRegister" asp-action="Create" class="btn btn-secondary">
-                Registrarse
+                Crear Cuenta
             </a>
+
         </form>
     </div>
 

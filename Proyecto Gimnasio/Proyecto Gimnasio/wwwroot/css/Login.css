@@ -1,0 +1,74 @@
+﻿/* --- 1. FONDO Y CENTRADO --- */
+body {
+    background-color: #121212; /* Fondo Negro */
+    color: #F5F5F5; /* Texto Blanco */
+    font-family: sans-serif;
+    height: 100vh; /* Altura completa de la pantalla */
+    display: flex; /* Para centrar la tarjeta */
+    justify-content: center; /* Centrado horizontal */
+    align-items: center; /* Centrado vertical */
+    margin: 0;
+}
+
+/* --- 2. LA TARJETA (Caja del login) --- */
+.card {
+    background-color: #1E1E1E; /* Gris oscuro */
+    width: 350px;
+    padding: 30px;
+    border-radius: 10px;
+    border: 1px solid #333; /* Borde sutil */
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5); /* Sombra elegante */
+    border-top: 4px solid #FFD500; /* Detalle amarillo arriba */
+}
+
+/* --- 3. INPUTS (Cajas de texto) --- */
+.form-control {
+    background-color: #121212;
+    border: 1px solid #444;
+    color: white;
+    margin-bottom: 15px; /* Espacio entre inputs */
+}
+
+    /* Al hacer clic en el input */
+    .form-control:focus {
+        background-color: #121212;
+        color: white;
+        border-color: #FFD500; /* Se ilumina amarillo */
+        box-shadow: none; /* Quita el brillo azul de Bootstrap */
+    }
+
+/* --- 4. BOTONES --- */
+/* Botón Ingresar (Amarillo) */
+.btn-primary {
+    background-color: #FFD500;
+    color: black;
+    font-weight: bold;
+    border: none;
+    width: 100%;
+    margin-top: 10px;
+}
+
+    .btn-primary:hover {
+        background-color: #e6c200;
+        color: black;
+    }
+
+/* Botón Registrarse (Transparente/Borde) */
+.btn-secondary {
+    background-color: transparent;
+    border: 1px solid #555;
+    color: #ccc;
+    width: 100%;
+    margin-top: 10px;
+}
+
+    .btn-secondary:hover {
+        border-color: #FFD500;
+        color: #FFD500;
+        background: transparent;
+    }
+
+/* Textos pequeños */
+.text-muted {
+    color: #888 !important;
+}
