@@ -1,24 +1,20 @@
 ﻿@model IEnumerable<Proyecto_Gimnasio.Models.Plans>
-
 @{
-    ViewData["Title"] = "Carrito";
-    var personId = (int)ViewBag.SelectedPersonId;
+    ViewData["Title"] = "Cart";
 }
 <link rel="stylesheet" href="~/css/SaleProduct.css" />
-<h2>Carrito</h2>
-
+<h2>Cart</h2>
 @if (!Model.Any())
 {
-    <div class="alert alert-warning">El carrito está vacío</div>
-    <a asp-action="Index" class="btn btn-primary">Ver planes</a>
+    <div class="alert alert-warning">Your cart is empty</div>
+    <a asp-action="Index" class="btn btn-primary">View plans</a>
     return;
 }
-
 <table class="table table-bordered">
     <thead>
         <tr>
             <th>Plan</th>
-            <th>Precio</th>
+            <th>Price</th>
             <th></th>
         </tr>
     </thead>
@@ -31,17 +27,15 @@
                 <td>
                     <form asp-action="Remove" method="post">
                         <input type="hidden" name="id" value="@p.IdPlan" />
-                        <button class="btn btn-danger btn-sm" type="submit">Quitar</button>
+                        <button class="btn btn-danger btn-sm" type="submit">Remove</button>
                     </form>
                 </td>
             </tr>
         }
     </tbody>
 </table>
-
 <h3 class="text-end">Total: @Model.Sum(x => x.Price).ToString("C")</h3>
-
 <div class="mt-3">
-    <a asp-action="Index" class="btn btn-secondary">Seguir comprando</a>
-    <a asp-action="Checkout" class="btn btn-success">Procesar compra</a>
+    <a asp-action="Index" class="btn btn-secondary">Continue shopping</a>
+    <a asp-action="Checkout" class="btn btn-success">Proceed to checkout</a>
 </div>

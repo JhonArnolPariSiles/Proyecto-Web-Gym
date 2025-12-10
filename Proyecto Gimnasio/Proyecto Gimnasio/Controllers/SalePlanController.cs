@@ -16,21 +16,27 @@ namespace Proyecto_Gimnasio.Controllers
 			_context = context;
 		}
 
-		// Mostrar planes y permitir buscar personas
+		// Mostrar planes y permitir buscar personas (solo clientes)
 		[HttpGet]
 		public async Task<IActionResult> Index(string searchName = "")
 		{
 			var plans = await _context.Planss.ToListAsync();
 
-			var persons = string.IsNullOrEmpty(searchName)
-				? await _context.Persons.ToListAsync()
-				: await _context.Persons
-					.Where(p => (p.Name + " " + p.LasName).Contains(searchName))
-					.ToListAsync();
+			var personsQuery = _context.Persons
+				.Include(p => p.User) // Incluir User para poder filtrar por rol
+				.Where(p => p.User.Rol == "Customer"); // Solo clientes
+
+			if (!string.IsNullOrEmpty(searchName))
+			{
+				personsQuery = personsQuery
+					.Where(p => (p.Name + " " + p.LasName).Contains(searchName));
+			}
+
+			var persons = await personsQuery.ToListAsync();
 
 			ViewBag.Persons = persons;
 			ViewBag.SelectedPersonId = SelectedPersonId;
-			ViewBag.SearchName = searchName; 
+			ViewBag.SearchName = searchName;
 
 			return View(plans);
 		}
@@ -143,11 +149,13 @@ namespace Proyecto_Gimnasio.Controllers
 			return RedirectToAction("Index");
 		}
 
-		// Mostrar personas y los planes que tienen
+		// Mostrar personas y los planes que tienen (solo clientes)
 		[HttpGet]
 		public async Task<IActionResult> PersonsIndex()
 		{
 			var persons = await _context.Persons
+				.Include(p => p.User)
+				.Where(p => p.User.Rol == "Customer") // Solo clientes
 				.Include(p => p.Sales)
 					.ThenInclude(s => s.saleDetailsPlans)
 						.ThenInclude(sd => sd.Plans)

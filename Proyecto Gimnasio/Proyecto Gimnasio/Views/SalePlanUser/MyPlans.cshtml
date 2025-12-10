@@ -2,16 +2,16 @@
 <link rel="stylesheet" href="~/css/saleplansuser.css" />
 
 <div class="saleplans-container">
-    <h1 class="mb-4">Mis Planes Comprados</h1>
+    <h1 class="mb-4">My Purchased Plans</h1>
 
     <div class="mb-4 text-end">
-        <a asp-action="Index" class="btn btn-primary btn-lg">Comprar Más Planes</a>
+        <a asp-action="Index" class="btn btn-primary btn-lg">Buy More Plans</a>
     </div>
 
     @if (!Model.Any())
     {
         <div class="alert alert-info text-center p-5">
-            Aún no has comprado ningún plan.
+            You haven't purchased any plans yet.
         </div>
     }
     else
@@ -21,7 +21,7 @@
             <div class="card mb-4 border-primary shadow">
                 <div class="card-header bg-primary text-white">
                     <h4 class="mb-0">
-                        Compra del @sale.DateSale.ToString("dd/MM/yyyy")
+                        Purchase from @sale.DateSale.ToString("dd/MM/yyyy")
                         <span class="float-end">Total: Bs @sale.Total</span>
                     </h4>
                 </div>
@@ -34,7 +34,7 @@
                                     <h5 class="text-warning">@detail.Plans.NamePlan</h5>
                                     <p class="mb-1">@detail.Plans.Description</p>
                                     <small class="text-muted">
-                                        Válido: <strong>@detail.Plans.StartDate.ToString("dd/MM/yyyy")</strong> -
+                                        Valid: <strong>@detail.Plans.StartDate.ToString("dd/MM/yyyy")</strong> -
                                         <strong>@detail.Plans.EndDate.ToString("dd/MM/yyyy")</strong>
                                     </small>
                                     <h6 class="text-success mt-2">Bs @detail.TotalPrice</h6>
