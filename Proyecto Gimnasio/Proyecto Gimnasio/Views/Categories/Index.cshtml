@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "Index";
 }
-
+<link rel="stylesheet" href="~/css/category.css" />
 <h1>Index</h1>
 
 <p>
@@ -19,17 +19,17 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.NameCategory)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdCategory">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdCategory">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdCategory">Delete</a>
-            </td>
-        </tr>
-}
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td style="color: white !important;">@item.NameCategory</td>
+                <td class="text-center">
+                    <a asp-action="Edit" asp-route-id="@item.IdCategory" class="btn btn-warning btn-sm">Editar</a>
+                    <a asp-action="Details" asp-route-id="@item.IdCategory" class="btn btn-info btn-sm ms-1">Ver</a>
+                    <a asp-action="Delete" asp-route-id="@item.IdCategory" class="btn btn-danger btn-sm ms-1">Eliminar</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

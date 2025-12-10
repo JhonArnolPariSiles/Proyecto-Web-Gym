@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "Index";
 }
-
+<link rel="stylesheet" href="~/css/plans.css" />
 <h1>Index</h1>
 
 <p>
@@ -51,15 +51,15 @@
             <td>
                 @if (User.IsInRole("Admin"))
                 {
-                    <a asp-action="Edit" asp-route-id="@item.IdPlan">Edit</a>
+                        <a asp-action="Edit" asp-route-id="@item.IdPlan" class="btn btn-warning btn-sm">Edit</a>
                 }
                 @if (User.IsInRole("Admin"))
                 {
-                    <a asp-action="Details" asp-route-id="@item.IdPlan">Details</a>
+                        <a asp-action="Details" asp-route-id="@item.IdPlan" class="btn btn-info btn-sm ms-1">Details</a>
                 }
                 @if (User.IsInRole("Admin"))
                 {
-                    <a asp-action="Delete" asp-route-id="@item.IdPlan">Delete</a>
+                        <a asp-action="Delete" asp-route-id="@item.IdPlan" class="btn btn-danger btn-sm ms-1">Delete</a>
                 }
             </td>
         </tr>
